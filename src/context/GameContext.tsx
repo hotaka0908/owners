@@ -12,6 +12,7 @@ interface GameContextType {
   executeChoice: (choiceId: string, customInput?: string) => void;
   toggleGameMode: () => void;
   restartGame: (companyName: string) => void;
+  addCash: (amount: number) => void;
   message: string;
 }
 
@@ -24,7 +25,8 @@ type GameAction =
   | { type: 'TOGGLE_GAME_MODE' }
   | { type: 'RESTART_GAME'; payload: string }
   | { type: 'UPDATE_STATE'; payload: GameState }
-  | { type: 'SET_MESSAGE'; payload: string };
+  | { type: 'SET_MESSAGE'; payload: string }
+  | { type: 'ADD_CASH'; payload: number };
 
 interface GameProviderState {
   gameState: GameState;
@@ -116,6 +118,19 @@ const gameReducer = (state: GameProviderState, action: GameAction): GameProvider
         message: action.payload
       };
     
+    case 'ADD_CASH':
+      return {
+        ...state,
+        gameState: {
+          ...state.gameState,
+          company: {
+            ...state.gameState.company,
+            cash: state.gameState.company.cash + action.payload
+          }
+        },
+        message: `ミニゲームで$${(action.payload / 1000).toFixed(0)}Kの資金を獲得しました！`
+      };
+    
     default:
       return state;
   }
@@ -154,6 +169,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'RESTART_GAME', payload: companyName });
   };
 
+  const addCash = (amount: number) => {
+    dispatch({ type: 'ADD_CASH', payload: amount });
+  };
+
   const value: GameContextType = {
     gameState: state.gameState,
     startNewGame,
@@ -163,6 +182,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     executeChoice,
     toggleGameMode,
     restartGame,
+    addCash,
     message: state.message
   };
 

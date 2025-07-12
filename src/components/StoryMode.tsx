@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import GameResults from './GameResults';
+import MiniGame from './MiniGame';
 import type { ActionChoice } from '../types/game';
 
 const StoryMode: React.FC = () => {
-  const { gameState, executeChoice, toggleGameMode, message } = useGame();
+  const { gameState, executeChoice, toggleGameMode, message, addCash } = useGame();
   const [selectedChoice, setSelectedChoice] = useState<string>('');
   const [customInput, setCustomInput] = useState<string>('');
   const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
   const [lastExecutedTurn, setLastExecutedTurn] = useState<number>(0);
   const [showResultMessage, setShowResultMessage] = useState<boolean>(false);
+  const [showMiniGame, setShowMiniGame] = useState<boolean>(false);
+  const [miniGameDifficulty, setMiniGameDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
 
   // Check if game is complete
   if (gameState.storyProgress.isGameComplete) {
@@ -110,6 +113,20 @@ const StoryMode: React.FC = () => {
       (!required.researchPoints || gameState.researchPoints >= required.researchPoints) &&
       (!required.reputation || company.reputation >= required.reputation)
     );
+  };
+
+  const handleMiniGameStart = (difficulty: 'easy' | 'medium' | 'hard') => {
+    setMiniGameDifficulty(difficulty);
+    setShowMiniGame(true);
+  };
+
+  const handleMiniGameSuccess = (earnedAmount: number) => {
+    addCash(earnedAmount);
+    setShowMiniGame(false);
+  };
+
+  const handleMiniGameClose = () => {
+    setShowMiniGame(false);
   };
 
   return (
@@ -316,6 +333,63 @@ const StoryMode: React.FC = () => {
           )}
         </div>
 
+        {/* Mini Game Section */}
+        {!showResultMessage && (
+          <div className="mt-8 bg-gradient-to-r from-green-800 to-emerald-800 bg-opacity-50 rounded-lg p-6">
+            <h3 className="text-white font-semibold mb-4 flex items-center">
+              🎮 資金調達ミニゲーム
+              <span className="ml-2 text-sm text-gray-300">- 投資家プレゼンテーション</span>
+            </h3>
+            <p className="text-gray-200 text-sm mb-4">
+              資金が不足している時は、投資家へのプレゼンテーションゲームで追加資金を調達できます！
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button
+                onClick={() => handleMiniGameStart('easy')}
+                className="bg-green-700 hover:bg-green-600 text-white p-4 rounded-lg transition-all transform hover:scale-105"
+              >
+                <div className="text-lg font-semibold mb-2">🟢 初心者向け</div>
+                <div className="text-sm text-green-200">
+                  • 制限時間: 30秒<br/>
+                  • 基本報酬: $100K<br/>
+                  • 難易度: 簡単
+                </div>
+              </button>
+              
+              <button
+                onClick={() => handleMiniGameStart('medium')}
+                className="bg-yellow-700 hover:bg-yellow-600 text-white p-4 rounded-lg transition-all transform hover:scale-105"
+              >
+                <div className="text-lg font-semibold mb-2">🟡 中級者向け</div>
+                <div className="text-sm text-yellow-200">
+                  • 制限時間: 25秒<br/>
+                  • 基本報酬: $300K<br/>
+                  • 難易度: 普通
+                </div>
+              </button>
+              
+              <button
+                onClick={() => handleMiniGameStart('hard')}
+                className="bg-red-700 hover:bg-red-600 text-white p-4 rounded-lg transition-all transform hover:scale-105"
+              >
+                <div className="text-lg font-semibold mb-2">🔴 上級者向け</div>
+                <div className="text-sm text-red-200">
+                  • 制限時間: 20秒<br/>
+                  • 基本報酬: $500K<br/>
+                  • 難易度: 困難
+                </div>
+              </button>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-400">
+                💡 ヒント: 高難易度ほど高額な資金を調達できますが、成功が困難になります
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Recent Actions */}
         {gameState.storyProgress.completedActions.length > 0 && (
           <div className="mt-12 bg-black bg-opacity-30 rounded-lg p-6">
@@ -330,6 +404,15 @@ const StoryMode: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Mini Game Modal */}
+      <MiniGame
+        isOpen={showMiniGame}
+        onClose={handleMiniGameClose}
+        onSuccess={handleMiniGameSuccess}
+        difficultyLevel={miniGameDifficulty}
+        currentCash={gameState.company.cash}
+      />
     </div>
   );
 };
