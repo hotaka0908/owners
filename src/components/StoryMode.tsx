@@ -14,8 +14,12 @@ const StoryMode: React.FC = () => {
   const [showMiniGame, setShowMiniGame] = useState<boolean>(false);
   const [miniGameDifficulty, setMiniGameDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
 
-  // Check if game is complete
-  if (gameState.storyProgress.isGameComplete) {
+  // Check if game is complete - either by flag or 20 turns reached
+  const isGameComplete = gameState.storyProgress.isGameComplete || 
+                        gameState.storyProgress.totalTurns >= 20 || 
+                        gameState.currentTurn.turnNumber > 20;
+  
+  if (isGameComplete) {
     return <GameResults />;
   }
 

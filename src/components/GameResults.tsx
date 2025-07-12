@@ -6,7 +6,7 @@ const GameResults: React.FC = () => {
   const [showFireworks, setShowFireworks] = useState(false);
   const [companyName, setCompanyName] = useState('');
 
-  const results = gameState.storyProgress.finalResults;
+  let results = gameState.storyProgress.finalResults;
   
   useEffect(() => {
     setShowFireworks(true);
@@ -14,7 +14,71 @@ const GameResults: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!results) return null;
+  // If no finalResults, calculate them on the fly
+  if (!results) {
+    const { company, regions } = gameState;
+    const totalHappyPeople = regions.reduce((sum, region) => 
+      sum + (region.population * region.happinessLevel / 100), 0
+    );
+    
+    // Calculate final score based on multiple factors
+    const marketCapScore = Math.min(100, company.marketCap / 1000000000 * 10); // 100B = 100 points
+    const happinessScore = Math.min(100, totalHappyPeople / 10000000000 * 100); // 10B people = 100 points
+    const reputationScore = company.reputation;
+    const productScore = Math.min(100, gameState.products.length * 10);
+    const regionScore = Math.min(100, regions.filter(r => r.marketPenetration > 0).length * 16.67);
+    
+    const finalScore = Math.round(
+      (marketCapScore * 0.3) + 
+      (happinessScore * 0.3) + 
+      (reputationScore * 0.2) + 
+      (productScore * 0.1) + 
+      (regionScore * 0.1)
+    );
+    
+    // Determine ranking
+    let ranking: 'S' | 'A' | 'B' | 'C' | 'D';
+    if (finalScore >= 90) ranking = 'S';
+    else if (finalScore >= 80) ranking = 'A';
+    else if (finalScore >= 70) ranking = 'B';
+    else if (finalScore >= 60) ranking = 'C';
+    else ranking = 'D';
+    
+    // Generate achievements
+    const achievements: string[] = [];
+    
+    if (company.marketCap >= 1000000000000) achievements.push('🏆 兆ドル企業達成');
+    if (company.marketCap >= 100000000000) achievements.push('💰 1000億ドル企業');
+    if (totalHappyPeople >= 5000000000) achievements.push('😊 50億人を幸せに');
+    if (totalHappyPeople >= 1000000000) achievements.push('🌍 10億人の笑顔');
+    if (company.reputation >= 90) achievements.push('⭐ 企業イメージ最高評価');
+    if (gameState.products.length >= 10) achievements.push('🚀 製品開発マスター');
+    if (regions.filter(r => r.marketPenetration > 50).length >= 4) achievements.push('🌏 グローバル展開成功');
+    if (company.employees >= 1000) achievements.push('👥 大企業の仲間入り');
+    if (gameState.researchPoints >= 100) achievements.push('🔬 研究開発リーダー');
+    
+    const formatCurrency = (amount: number): string => {
+      if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
+      if (amount >= 1e9) return `$${(amount / 1e9).toFixed(1)}B`;
+      if (amount >= 1e6) return `$${(amount / 1e6).toFixed(1)}M`;
+      if (amount >= 1e3) return `$${(amount / 1e3).toFixed(1)}K`;
+      return `$${amount.toFixed(0)}`;
+    };
+    
+    // Generate summary
+    const summary = `${company.name}は20ターンの挑戦を終え、時価総額${formatCurrency(company.marketCap)}、${Math.round(totalHappyPeople / 1000000)}万人の人々を幸せにしました。${achievements.length}個の実績を解除し、総合評価${ranking}ランクを獲得しました！`;
+    
+    // Create temporary results object
+    const tempResults = {
+      finalScore,
+      achievements,
+      summary,
+      ranking
+    };
+    
+    // Use temporary results for display
+    results = tempResults;
+  }
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
