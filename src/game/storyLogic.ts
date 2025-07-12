@@ -92,10 +92,35 @@ const analyzeGameSituation = (gameState: GameState) => {
 // Financial action generators
 const getFinancialActionTitle = (gameState: GameState): string => {
   const situation = analyzeGameSituation(gameState);
+  const turnNumber = gameState.currentTurn.turnNumber;
   
-  if (situation.isLowCash) return "緊急資金調達を実行する";
-  if (situation.isHighGrowth) return "新たな投資ラウンドを開始する";
-  return "財務戦略を見直す";
+  if (situation.isLowCash) {
+    const emergencyOptions = [
+      "緊急資金調達を実行する",
+      "投資家への緊急プレゼンを開催",
+      "資金ショート回避策を実施",
+      "クラウドファンディングを開始"
+    ];
+    return emergencyOptions[turnNumber % emergencyOptions.length];
+  }
+  
+  if (situation.isHighGrowth) {
+    const growthOptions = [
+      "シリーズA資金調達を開始",
+      "戦略的投資家との提携交渉",
+      "IPO準備を本格化させる",
+      "グローバル展開資金を調達"
+    ];
+    return growthOptions[turnNumber % growthOptions.length];
+  }
+  
+  const normalOptions = [
+    "財務戦略を見直す",
+    "コスト最適化プログラム実施",
+    "収益モデルを革新する",
+    "財務基盤を強化する"
+  ];
+  return normalOptions[turnNumber % normalOptions.length];
 };
 
 const getFinancialActionDescription = (gameState: GameState): string => {
@@ -117,10 +142,35 @@ const getFinancialRequirements = (gameState: GameState) => {
 // Innovation action generators
 const getInnovationActionTitle = (gameState: GameState): string => {
   const situation = analyzeGameSituation(gameState);
+  const turnNumber = gameState.currentTurn.turnNumber;
   
-  if (!situation.hasProducts) return "革新的な製品を開発する";
-  if (gameState.researchPoints > 20) return "次世代技術の研究を開始する";
-  return "既存製品を改良する";
+  if (!situation.hasProducts) {
+    const startupOptions = [
+      "革新的な製品を開発する",
+      "MVP（最小実行可能製品）を作成",
+      "市場破壊的イノベーションを起こす",
+      "プロトタイプ開発に集中する"
+    ];
+    return startupOptions[turnNumber % startupOptions.length];
+  }
+  
+  if (gameState.researchPoints > 20) {
+    const advancedOptions = [
+      "次世代技術の研究を開始する",
+      "AI・機械学習技術を導入",
+      "量子コンピューティング研究所設立",
+      "未来技術の特許取得を目指す"
+    ];
+    return advancedOptions[turnNumber % advancedOptions.length];
+  }
+  
+  const improveOptions = [
+    "既存製品を改良する",
+    "ユーザー体験を大幅に向上",
+    "製品ラインナップを拡張",
+    "技術的負債を解消する"
+  ];
+  return improveOptions[turnNumber % improveOptions.length];
 };
 
 const getInnovationActionDescription = (gameState: GameState): string => {
@@ -494,23 +544,73 @@ export const generateNewTurn = (gameState: GameState): GameTurn => {
 const generateSituationDescription = (gameState: GameState, turnNumber: number): string => {
   const { company, globalHappiness, currentQuarter, currentYear } = gameState;
   const situation = analyzeGameSituation(gameState);
+  const totalHappyPeople = gameState.regions.reduce((sum, region) => 
+    sum + (region.population * region.happinessLevel / 100), 0
+  );
   
-  const templates = [
-    `${company.name}は${currentYear}年第${currentQuarter}四半期を迎えました。現在の時価総額は${formatCurrency(company.marketCap)}、世界の幸福度は${globalHappiness}%です。`,
-    `ターン${turnNumber}: 激変する市場環境の中で、${company.name}は重要な局面を迎えています。`,
-    `新たな挑戦の時です。現在の企業価値は${formatCurrency(company.marketCap)}、${Math.floor(globalHappiness * 100000000 / 100)}人の人々を幸せにしています。`,
-    `${company.name}の成長ストーリーは続きます。次の一手が会社の未来を大きく左右するでしょう。`
+  // Progressive storyline based on turn number and company status
+  let baseDescription = "";
+  
+  // Early game (turns 1-5)
+  if (turnNumber <= 5) {
+    const earlyTemplates = [
+      `${company.name}の創業者として、あなたの壮大な旅が始まりました。現在の時価総額${formatCurrency(company.marketCap)}から、世界を変える企業へと成長させましょう。`,
+      `創業間もない${company.name}が、初めての重要な戦略的決断を迫られています。${Math.round(totalHappyPeople / 1000000)}万人の人々が既にあなたの決断を注視しています。`,
+      `スタートアップとしての基盤固めが重要な時期です。${company.name}は${currentYear}年第${currentQuarter}四半期、資金${formatCurrency(company.cash)}を使って次の一手を考えています。`,
+      `市場への参入戦略が問われる局面です。${company.name}の企業イメージ${company.reputation}ポイントを活かし、どう成長していくかが鍵となります。`,
+      `創業期の重要な分岐点を迎えました。現在${company.employees}人の小さなチームが、大きな夢に向かって歩み続けています。`
+    ];
+    baseDescription = earlyTemplates[turnNumber - 1];
+  }
+  // Mid game (turns 6-15)
+  else if (turnNumber <= 15) {
+    const midTemplates = [
+      `${company.name}は成長フェーズに入りました。時価総額${formatCurrency(company.marketCap)}を誇る企業として、次のステージへの飛躍が期待されています。`,
+      `激化する競争環境の中で、${company.name}は独自の存在感を示し始めています。世界${Math.round(totalHappyPeople / 100000000)}億人が、あなたの製品やサービスの恩恵を受けています。`,
+      `企業としての基盤が固まり、新たな挑戦への準備が整いました。従業員${company.employees}人と共に、さらなる高みを目指します。`,
+      `グローバル展開の機会が広がっています。現在の企業イメージ${company.reputation}ポイントを活かし、世界市場での地位確立を目指しましょう。`,
+      `技術革新とマーケット拡大のバランスが重要な時期です。${gameState.products.length}個の製品ラインナップを持つ${company.name}の次なる戦略は？`,
+      `投資家からの注目も高まり、${company.name}の一挙手一投足が業界に影響を与えるようになりました。責任重大な決断の時です。`,
+      `持続可能な成長と社会的責任のバランスを取る必要があります。世界の幸福度${globalHappiness}%向上への貢献も評価されています。`,
+      `競合他社との差別化が急務となっています。${company.name}独自の価値提案で市場をリードできるでしょうか？`,
+      `中堅企業から大企業への転換点を迎えています。組織運営と事業拡大の両立が求められる重要な局面です。`,
+      `国際的な影響力を持つ企業として、${company.name}の社会的使命がより重要になってきました。`
+    ];
+    baseDescription = midTemplates[(turnNumber - 6) % midTemplates.length];
+  }
+  // Late game (turns 16-20)
+  else {
+    const lateTemplates = [
+      `${company.name}は業界のリーディングカンパニーとして注目を集めています。最終局面での戦略的決断が、企業の運命を決めるでしょう。`,
+      `世界的企業への最終段階です。時価総額${formatCurrency(company.marketCap)}、${Math.round(totalHappyPeople / 100000000)}億人の幸福に貢献する企業として、歴史に名を刻む時が近づいています。`,
+      `ゲーム終盤戦！${company.name}の20ターンの挑戦もクライマックスを迎えました。最後の戦略選択で、どんな結末を迎えるのでしょうか？`,
+      `ファイナルターンが近づいています。これまでの努力の集大成として、${company.name}の最終的な成果が問われる時です。`,
+      `ついに最終ターン！${company.name}の壮大な20ターンの物語がここに完結します。最後の一手で、伝説の企業となれるでしょうか？`
+    ];
+    baseDescription = lateTemplates[Math.min(turnNumber - 16, lateTemplates.length - 1)];
+  }
+  
+  // Add situational context
+  if (situation.isInCrisis) {
+    baseDescription += " ⚠️ しかし、現在は危機的な状況にあり、迅速で的確な対応が求められています。";
+  } else if (situation.isHighGrowth) {
+    baseDescription += " 🚀 絶好調の成長軌道に乗っており、さらなる飛躍のチャンスを掴むべき時です。";
+  } else if (situation.isLowCash) {
+    baseDescription += " 💰 資金繰りに注意が必要な状況です。効率的な資金活用が鍵となります。";
+  } else if (situation.isLowHappiness) {
+    baseDescription += " 😔 世界の幸福度向上への貢献がまだ十分ではありません。社会的インパクトの強化が必要です。";
+  }
+  
+  // Add progress context
+  const progressText = [
+    " 🎯 目標達成まで、あと一歩一歩着実に進んでいきましょう。",
+    " ⏰ 限られた時間の中で、最大の成果を上げる戦略を選択してください。",
+    " 🌟 今回の決断が、企業の未来を大きく左右することになります。",
+    " 💪 チーム一丸となって、困難を乗り越えていく時です。",
+    " 🎲 運命を切り開く、重要な選択の瞬間が訪れました。"
   ];
   
-  let baseDescription = templates[turnNumber % templates.length];
-  
-  if (situation.isInCrisis) {
-    baseDescription += " しかし、現在は危機的な状況にあり、迅速な対応が求められています。";
-  } else if (situation.isHighGrowth) {
-    baseDescription += " 順調な成長を続けており、次の飛躍のチャンスを掴むときです。";
-  } else if (situation.isEarlyGame) {
-    baseDescription += " まだ創業期の段階で、将来への基盤作りが重要です。";
-  }
+  baseDescription += progressText[turnNumber % progressText.length];
   
   return baseDescription;
 };

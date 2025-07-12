@@ -8,25 +8,21 @@ const StoryMode: React.FC = () => {
   const [selectedChoice, setSelectedChoice] = useState<string>('');
   const [customInput, setCustomInput] = useState<string>('');
   const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
-  const [isExecuting, setIsExecuting] = useState<boolean>(false);
+  const [lastExecutedTurn, setLastExecutedTurn] = useState<number>(0);
 
   // Check if game is complete
   if (gameState.storyProgress.isGameComplete) {
     return <GameResults />;
   }
 
+  // Reset selection when turn changes
   useEffect(() => {
-    if (isExecuting) {
-      const timer = setTimeout(() => {
-        setIsExecuting(false);
-        setSelectedChoice('');
-        setShowCustomInput(false);
-        setCustomInput('');
-      }, 2000); // Show result for 2 seconds then automatically proceed
-      
-      return () => clearTimeout(timer);
+    if (gameState.currentTurn.turnNumber !== lastExecutedTurn) {
+      setSelectedChoice('');
+      setShowCustomInput(false);
+      setCustomInput('');
     }
-  }, [isExecuting, message]);
+  }, [gameState.currentTurn.turnNumber, lastExecutedTurn]);
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
@@ -58,7 +54,8 @@ const StoryMode: React.FC = () => {
   };
 
   const handleExecuteChoice = () => {
-    setIsExecuting(true);
+    // Record the current turn to track when it changes
+    setLastExecutedTurn(gameState.currentTurn.turnNumber);
     
     if (selectedChoice === 'custom') {
       if (customInput.trim()) {
@@ -143,17 +140,9 @@ const StoryMode: React.FC = () => {
 
       {/* Message Bar */}
       {message && (
-        <div className={`border-l-4 p-4 ${isExecuting ? 'bg-green-900 bg-opacity-50 border-green-400' : 'bg-blue-900 bg-opacity-50 border-blue-400'}`}>
+        <div className="bg-blue-900 bg-opacity-50 border-l-4 border-blue-400 p-4">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center">
-              {isExecuting && (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-400 mr-3"></div>
-              )}
-              <p className={isExecuting ? 'text-green-200' : 'text-blue-200'}>{message}</p>
-              {isExecuting && (
-                <span className="ml-auto text-green-300 text-sm">次のターンに進行中...</span>
-              )}
-            </div>
+            <p className="text-blue-200">{message}</p>
           </div>
         </div>
       )}
@@ -277,26 +266,15 @@ const StoryMode: React.FC = () => {
           </div>
 
           {/* Execute Button */}
-          {selectedChoice && !isExecuting && (
+          {selectedChoice && (
             <div className="flex justify-center">
               <button
                 onClick={handleExecuteChoice}
-                disabled={(selectedChoice === 'custom' && !customInput.trim()) || isExecuting}
+                disabled={selectedChoice === 'custom' && !customInput.trim()}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-all transform hover:scale-105"
               >
                 {selectedChoice === 'custom' ? 'カスタム戦略を実行' : '選択した行動を実行'}
               </button>
-            </div>
-          )}
-
-          {/* Executing Overlay */}
-          {isExecuting && (
-            <div className="flex justify-center">
-              <div className="bg-green-800 bg-opacity-50 rounded-lg p-6 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
-                <p className="text-green-200 font-semibold">戦略を実行中...</p>
-                <p className="text-green-300 text-sm mt-2">結果を確認後、自動で次のターンに進みます</p>
-              </div>
             </div>
           )}
         </div>
