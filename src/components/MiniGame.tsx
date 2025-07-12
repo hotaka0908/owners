@@ -13,7 +13,7 @@ const MiniGame: React.FC<MiniGameProps> = ({
   onClose, 
   onSuccess, 
   difficultyLevel,
-  currentCash 
+  currentCash: _ 
 }) => {
   const [gameState, setGameState] = useState<'ready' | 'playing' | 'result'>('ready');
   const [score, setScore] = useState(0);
