@@ -1,4 +1,5 @@
-import { GameState, Company, Region, Product, ProductCategory, GameEvent } from '../types/game';
+import type { GameState, Company, Region, Product } from '../types/game';
+import { ProductCategory } from '../types/game';
 
 export const createInitialGameState = (companyName: string): GameState => {
   const initialCompany: Company = {

@@ -30,14 +30,16 @@ export interface Product {
   isReleased: boolean;
 }
 
-export enum ProductCategory {
-  EDUCATION = 'education',
-  HEALTHCARE = 'healthcare',
-  ENTERTAINMENT = 'entertainment',
-  COMMUNICATION = 'communication',
-  TRANSPORTATION = 'transportation',
-  ENVIRONMENT = 'environment'
-}
+export const ProductCategory = {
+  EDUCATION: 'education',
+  HEALTHCARE: 'healthcare',
+  ENTERTAINMENT: 'entertainment',
+  COMMUNICATION: 'communication',
+  TRANSPORTATION: 'transportation',
+  ENVIRONMENT: 'environment'
+} as const;
+
+export type ProductCategory = typeof ProductCategory[keyof typeof ProductCategory];
 
 export interface GameState {
   company: Company;

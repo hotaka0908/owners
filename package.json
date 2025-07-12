@@ -1,8 +1,15 @@
 {
   "name": "global-happiness-corp",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Business simulation game: Build a company that makes 10 billion people happy while achieving world's highest market cap",
+  "author": "hotaka0908",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hotaka0908/global-happiness-corp.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

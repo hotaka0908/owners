@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { GameState, ProductCategory } from '../types/game';
+import React, { createContext, useContext, useReducer } from 'react';
+import type { ReactNode } from 'react';
+import type { GameState, ProductCategory } from '../types/game';
 import { createInitialGameState, advanceQuarter, developProduct, enterMarket } from '../game/gameLogic';
 
 interface GameContextType {
