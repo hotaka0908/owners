@@ -39,6 +39,15 @@ export const ProductCategory = {
   ENVIRONMENT: 'environment'
 } as const;
 
+export const ProductCategoryLabels = {
+  education: '教育',
+  healthcare: '医療',
+  entertainment: 'エンターテイメント',
+  communication: 'コミュニケーション',
+  transportation: '交通',
+  environment: '環境'
+} as const;
+
 export type ProductCategory = typeof ProductCategory[keyof typeof ProductCategory];
 
 export interface GameState {

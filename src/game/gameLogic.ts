@@ -16,7 +16,7 @@ export const createInitialGameState = (companyName: string): GameState => {
   const initialRegions: Region[] = [
     {
       id: 'north-america',
-      name: 'North America',
+      name: '北米',
       population: 579000000,
       happinessLevel: 65,
       marketPenetration: 0,
@@ -24,7 +24,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     },
     {
       id: 'europe',
-      name: 'Europe',
+      name: 'ヨーロッパ',
       population: 748000000,
       happinessLevel: 70,
       marketPenetration: 0,
@@ -32,7 +32,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     },
     {
       id: 'asia',
-      name: 'Asia',
+      name: 'アジア',
       population: 4641000000,
       happinessLevel: 55,
       marketPenetration: 0,
@@ -40,7 +40,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     },
     {
       id: 'africa',
-      name: 'Africa',
+      name: 'アフリカ',
       population: 1340000000,
       happinessLevel: 45,
       marketPenetration: 0,
@@ -48,7 +48,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     },
     {
       id: 'south-america',
-      name: 'South America',
+      name: '南米',
       population: 434000000,
       happinessLevel: 50,
       marketPenetration: 0,
@@ -56,7 +56,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     },
     {
       id: 'oceania',
-      name: 'Oceania',
+      name: 'オセアニア',
       population: 46000000,
       happinessLevel: 75,
       marketPenetration: 0,

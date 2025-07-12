@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { ProductCategory } from '../types/game';
+import { ProductCategory, ProductCategoryLabels } from '../types/game';
 
 const Dashboard: React.FC = () => {
   const { gameState, advanceTime, createProduct, expandToMarket, message } = useGame();
   const [selectedTab, setSelectedTab] = useState<'overview' | 'business' | 'markets' | 'finance'>('overview');
 
   const formatCurrency = (amount: number) => {
-    if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}T`;
+    if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
     if (amount >= 1e9) return `$${(amount / 1e9).toFixed(1)}B`;
     if (amount >= 1e6) return `$${(amount / 1e6).toFixed(1)}M`;
     if (amount >= 1e3) return `$${(amount / 1e3).toFixed(1)}K`;
@@ -15,10 +15,10 @@ const Dashboard: React.FC = () => {
   };
 
   const formatNumber = (num: number) => {
-    if (num >= 1e9) return `${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M`;
-    if (num >= 1e3) return `${(num / 1e3).toFixed(1)}K`;
-    return num.toString();
+    if (num >= 1e9) return `${(num / 1e9).toFixed(1)}億人`;
+    if (num >= 1e6) return `${(num / 1e6).toFixed(1)}万人`;
+    if (num >= 1e3) return `${(num / 1e3).toFixed(1)}千人`;
+    return `${num}人`;
   };
 
   const totalHappyPeople = gameState.regions.reduce((sum, region) => 
@@ -35,15 +35,15 @@ const Dashboard: React.FC = () => {
               <h1 className="text-xl font-bold text-gray-900">{gameState.company.name}</h1>
               <div className="flex items-center space-x-6 text-sm">
                 <div className="flex items-center">
-                  <span className="text-gray-500 mr-2">Market Cap:</span>
+                  <span className="text-gray-500 mr-2">時価総額:</span>
                   <span className="font-semibold text-green-600">{formatCurrency(gameState.company.marketCap)}</span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-gray-500 mr-2">Happy People:</span>
+                  <span className="text-gray-500 mr-2">幸せな人々:</span>
                   <span className="font-semibold text-blue-600">{formatNumber(totalHappyPeople)}</span>
                 </div>
                 <div className="flex items-center">
-                  <span className="text-gray-500 mr-2">Cash:</span>
+                  <span className="text-gray-500 mr-2">資金:</span>
                   <span className="font-semibold text-gray-900">{formatCurrency(gameState.company.cash)}</span>
                 </div>
               </div>
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
                 onClick={advanceTime}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
               >
-                Next Quarter
+                次の四半期
               </button>
             </div>
           </div>
@@ -77,10 +77,10 @@ const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'business', label: 'Business' },
-              { id: 'markets', label: 'Markets' },
-              { id: 'finance', label: 'Finance' }
+              { id: 'overview', label: '概要' },
+              { id: 'business', label: '事業' },
+              { id: 'markets', label: '市場' },
+              { id: 'finance', label: '財務' }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -104,22 +104,22 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Company Stats */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Company Stats</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">会社統計</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Employees:</span>
-                  <span className="font-medium">{gameState.company.employees.toLocaleString()}</span>
+                  <span className="text-gray-600">従業員数:</span>
+                  <span className="font-medium">{gameState.company.employees.toLocaleString()}人</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Revenue:</span>
+                  <span className="text-gray-600">売上:</span>
                   <span className="font-medium">{formatCurrency(gameState.company.revenue)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Profit:</span>
+                  <span className="text-gray-600">利益:</span>
                   <span className="font-medium">{formatCurrency(gameState.company.profit)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Reputation:</span>
+                  <span className="text-gray-600">企業イメージ:</span>
                   <span className="font-medium">{gameState.company.reputation}/100</span>
                 </div>
               </div>
@@ -127,23 +127,23 @@ const Dashboard: React.FC = () => {
 
             {/* Global Impact */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Global Impact</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">世界への影響</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Happy People:</span>
+                  <span className="text-gray-600">幸せな人々:</span>
                   <span className="font-medium text-blue-600">{formatNumber(totalHappyPeople)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Global Happiness:</span>
+                  <span className="text-gray-600">世界幸福度:</span>
                   <span className="font-medium">{gameState.globalHappiness}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Products:</span>
-                  <span className="font-medium">{gameState.products.length}</span>
+                  <span className="text-gray-600">製品数:</span>
+                  <span className="font-medium">{gameState.products.length}個</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Research Points:</span>
-                  <span className="font-medium">{gameState.researchPoints}</span>
+                  <span className="text-gray-600">研究ポイント:</span>
+                  <span className="font-medium">{gameState.researchPoints}pt</span>
                 </div>
               </div>
             </div>
@@ -180,17 +180,17 @@ const Dashboard: React.FC = () => {
           <div className="space-y-6">
             {/* Product Development */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Product Development</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">製品開発</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.values(ProductCategory).map(category => (
                   <button
                     key={category}
-                    onClick={() => createProduct(`New ${category} Product`, category, 'medium')}
+                    onClick={() => createProduct(`新しい${ProductCategoryLabels[category]}製品`, category, 'medium')}
                     className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
                   >
                     <div className="text-center">
-                      <div className="font-medium capitalize">{category}</div>
-                      <div className="text-sm text-gray-500 mt-1">$200K investment</div>
+                      <div className="font-medium">{ProductCategoryLabels[category]}</div>
+                      <div className="text-sm text-gray-500 mt-1">$200K 投資</div>
                     </div>
                   </button>
                 ))}
@@ -199,19 +199,19 @@ const Dashboard: React.FC = () => {
 
             {/* Current Products */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Current Products</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">現在の製品</h3>
               {gameState.products.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No products yet. Start developing your first product!</p>
+                <p className="text-gray-500 text-center py-8">まだ製品がありません。最初の製品を開発しましょう！</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {gameState.products.map(product => (
                     <div key={product.id} className="border rounded-lg p-4">
                       <h4 className="font-medium">{product.name}</h4>
-                      <p className="text-sm text-gray-600 capitalize">{product.category}</p>
+                      <p className="text-sm text-gray-600">{ProductCategoryLabels[product.category]}</p>
                       <div className="mt-2 space-y-1 text-xs">
-                        <div>Quality: {product.qualityScore}/100</div>
-                        <div>Social Impact: {product.socialImpactScore}/100</div>
-                        <div>Status: {product.isReleased ? 'Released' : 'In Development'}</div>
+                        <div>品質: {product.qualityScore}/100</div>
+                        <div>社会的インパクト: {product.socialImpactScore}/100</div>
+                        <div>状態: {product.isReleased ? 'リリース済み' : '開発中'}</div>
                       </div>
                     </div>
                   ))}
@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
 
         {selectedTab === 'markets' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Global Markets</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">世界市場</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {gameState.regions.map(region => (
                 <div key={region.id} className="border rounded-lg p-4">
