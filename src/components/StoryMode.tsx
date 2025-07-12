@@ -9,6 +9,7 @@ const StoryMode: React.FC = () => {
   const [customInput, setCustomInput] = useState<string>('');
   const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
   const [lastExecutedTurn, setLastExecutedTurn] = useState<number>(0);
+  const [showResultMessage, setShowResultMessage] = useState<boolean>(false);
 
   // Check if game is complete
   if (gameState.storyProgress.isGameComplete) {
@@ -21,8 +22,20 @@ const StoryMode: React.FC = () => {
       setSelectedChoice('');
       setShowCustomInput(false);
       setCustomInput('');
+      setShowResultMessage(false);
     }
   }, [gameState.currentTurn.turnNumber, lastExecutedTurn]);
+
+  // Show result message briefly then hide
+  useEffect(() => {
+    if (showResultMessage && message) {
+      const timer = setTimeout(() => {
+        setShowResultMessage(false);
+      }, 1500); // Show for 1.5 seconds then hide
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showResultMessage, message]);
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
@@ -56,6 +69,7 @@ const StoryMode: React.FC = () => {
   const handleExecuteChoice = () => {
     // Record the current turn to track when it changes
     setLastExecutedTurn(gameState.currentTurn.turnNumber);
+    setShowResultMessage(true);
     
     if (selectedChoice === 'custom') {
       if (customInput.trim()) {
@@ -138,11 +152,14 @@ const StoryMode: React.FC = () => {
         </div>
       </header>
 
-      {/* Message Bar */}
-      {message && (
-        <div className="bg-blue-900 bg-opacity-50 border-l-4 border-blue-400 p-4">
+      {/* Message Bar - only show when result message is active */}
+      {showResultMessage && message && (
+        <div className="bg-green-900 bg-opacity-70 border-l-4 border-green-400 p-4 transition-all duration-300">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-blue-200">{message}</p>
+            <div className="flex items-center">
+              <div className="animate-pulse w-3 h-3 bg-green-400 rounded-full mr-3"></div>
+              <p className="text-green-200 font-medium">{message}</p>
+            </div>
           </div>
         </div>
       )}
@@ -179,12 +196,14 @@ const StoryMode: React.FC = () => {
                 <button
                   key={choice.id}
                   onClick={() => handleChoiceSelection(choice.id)}
-                  disabled={!canAfford}
+                  disabled={!canAfford || showResultMessage}
                   className={`p-4 rounded-lg border-2 text-left transition-all ${
-                    isSelected
-                      ? 'border-blue-400 bg-blue-900 bg-opacity-50'
+                    showResultMessage
+                      ? 'border-gray-700 bg-gray-900 bg-opacity-30 opacity-30 cursor-not-allowed'
+                      : isSelected
+                      ? 'border-blue-400 bg-blue-900 bg-opacity-70 ring-2 ring-blue-300'
                       : canAfford
-                      ? 'border-gray-600 bg-gray-800 bg-opacity-50 hover:border-gray-500 hover:bg-opacity-70'
+                      ? 'border-gray-600 bg-gray-800 bg-opacity-50 hover:border-gray-500 hover:bg-opacity-70 hover:scale-102'
                       : 'border-gray-700 bg-gray-900 bg-opacity-30 opacity-50 cursor-not-allowed'
                   }`}
                 >
@@ -239,23 +258,27 @@ const StoryMode: React.FC = () => {
             <div className="space-y-3">
               <button
                 onClick={() => handleChoiceSelection('custom')}
+                disabled={showResultMessage}
                 className={`w-full p-3 rounded border-2 text-left transition-all ${
-                  selectedChoice === 'custom'
-                    ? 'border-pink-400 bg-pink-900 bg-opacity-50'
-                    : 'border-gray-600 bg-gray-800 bg-opacity-50 hover:border-gray-500'
+                  showResultMessage
+                    ? 'border-gray-700 bg-gray-900 bg-opacity-30 opacity-30 cursor-not-allowed'
+                    : selectedChoice === 'custom'
+                    ? 'border-pink-400 bg-pink-900 bg-opacity-70 ring-2 ring-pink-300'
+                    : 'border-gray-600 bg-gray-800 bg-opacity-50 hover:border-gray-500 hover:scale-102'
                 }`}
               >
                 <span className="text-white font-medium">カスタム戦略を実行する</span>
               </button>
               
-              {showCustomInput && (
+              {showCustomInput && !showResultMessage && (
                 <div className="space-y-3">
                   <textarea
                     value={customInput}
                     onChange={(e) => setCustomInput(e.target.value)}
                     placeholder="あなたのアイデアを詳しく説明してください...（例：AIを活用した教育プラットフォームを開発し、世界中の子供たちに無料で提供する）"
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-pink-400"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-all"
                     rows={3}
+                    disabled={showResultMessage}
                   />
                   <div className="text-xs text-gray-400">
                     必要リソース: 資金 $300K、従業員 15人、研究ポイント 5pt
@@ -266,15 +289,27 @@ const StoryMode: React.FC = () => {
           </div>
 
           {/* Execute Button */}
-          {selectedChoice && (
+          {selectedChoice && !showResultMessage && (
             <div className="flex justify-center">
               <button
                 onClick={handleExecuteChoice}
                 disabled={selectedChoice === 'custom' && !customInput.trim()}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-all transform hover:scale-105"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-all transform hover:scale-105 active:scale-95"
               >
                 {selectedChoice === 'custom' ? 'カスタム戦略を実行' : '選択した行動を実行'}
               </button>
+            </div>
+          )}
+
+          {/* Executing Feedback */}
+          {showResultMessage && (
+            <div className="flex justify-center">
+              <div className="bg-green-800 bg-opacity-50 rounded-lg px-6 py-3 text-center">
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-400"></div>
+                  <p className="text-green-200 font-medium">戦略実行中...</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
