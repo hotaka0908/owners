@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import type { ReactNode } from 'react';
 import type { GameState, ProductCategory } from '../types/game';
-import { createInitialGameState, advanceQuarter, developProduct, enterMarket, executeStoryChoice, switchGameMode } from '../game/gameLogic';
+import { createInitialGameState, advanceQuarter, developProduct, enterMarket, executeStoryChoice, switchGameMode, resetGame } from '../game/gameLogic';
 
 interface GameContextType {
   gameState: GameState;
@@ -11,6 +11,7 @@ interface GameContextType {
   expandToMarket: (regionId: string, strategy: 'aggressive' | 'moderate' | 'conservative') => void;
   executeChoice: (choiceId: string, customInput?: string) => void;
   toggleGameMode: () => void;
+  restartGame: (companyName: string) => void;
   message: string;
 }
 
@@ -21,6 +22,7 @@ type GameAction =
   | { type: 'ENTER_MARKET'; payload: { regionId: string; strategy: 'aggressive' | 'moderate' | 'conservative' } }
   | { type: 'EXECUTE_CHOICE'; payload: { choiceId: string; customInput?: string } }
   | { type: 'TOGGLE_GAME_MODE' }
+  | { type: 'RESTART_GAME'; payload: string }
   | { type: 'UPDATE_STATE'; payload: GameState }
   | { type: 'SET_MESSAGE'; payload: string };
 
@@ -95,6 +97,13 @@ const gameReducer = (state: GameProviderState, action: GameAction): GameProvider
         message: newMode === 'story' ? 'ストーリーモードに切り替えました。' : 'ダッシュボードモードに切り替えました。'
       };
     
+    case 'RESTART_GAME':
+      return {
+        ...state,
+        gameState: resetGame(action.payload),
+        message: `${action.payload}で新しいゲームを開始しました！`
+      };
+    
     case 'UPDATE_STATE':
       return {
         ...state,
@@ -141,6 +150,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'TOGGLE_GAME_MODE' });
   };
 
+  const restartGame = (companyName: string) => {
+    dispatch({ type: 'RESTART_GAME', payload: companyName });
+  };
+
   const value: GameContextType = {
     gameState: state.gameState,
     startNewGame,
@@ -149,6 +162,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     expandToMarket,
     executeChoice,
     toggleGameMode,
+    restartGame,
     message: state.message
   };
 

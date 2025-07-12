@@ -66,6 +66,13 @@ export interface GameState {
     totalTurns: number;
     completedActions: string[];
     currentSituation: string;
+    isGameComplete: boolean;
+    finalResults?: {
+      finalScore: number;
+      achievements: string[];
+      summary: string;
+      ranking: 'S' | 'A' | 'B' | 'C' | 'D';
+    };
   };
 }
 

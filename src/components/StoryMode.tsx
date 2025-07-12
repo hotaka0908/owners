@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
+import GameResults from './GameResults';
 import type { ActionChoice } from '../types/game';
 
 const StoryMode: React.FC = () => {
@@ -7,6 +8,25 @@ const StoryMode: React.FC = () => {
   const [selectedChoice, setSelectedChoice] = useState<string>('');
   const [customInput, setCustomInput] = useState<string>('');
   const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
+  const [isExecuting, setIsExecuting] = useState<boolean>(false);
+
+  // Check if game is complete
+  if (gameState.storyProgress.isGameComplete) {
+    return <GameResults />;
+  }
+
+  useEffect(() => {
+    if (isExecuting) {
+      const timer = setTimeout(() => {
+        setIsExecuting(false);
+        setSelectedChoice('');
+        setShowCustomInput(false);
+        setCustomInput('');
+      }, 2000); // Show result for 2 seconds then automatically proceed
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isExecuting, message]);
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
@@ -38,16 +58,15 @@ const StoryMode: React.FC = () => {
   };
 
   const handleExecuteChoice = () => {
+    setIsExecuting(true);
+    
     if (selectedChoice === 'custom') {
       if (customInput.trim()) {
         executeChoice('custom-action', customInput.trim());
-        setCustomInput('');
       }
     } else {
       executeChoice(selectedChoice);
     }
-    setSelectedChoice('');
-    setShowCustomInput(false);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -95,7 +114,22 @@ const StoryMode: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-400 text-sm">ターン {gameState.currentTurn.turnNumber}</span>
+              <span className="text-gray-400 text-sm">
+                ターン {gameState.currentTurn.turnNumber}/20
+              </span>
+              <div className="bg-gray-700 rounded-full px-3 py-1">
+                <div className="flex items-center space-x-2">
+                  <div className="w-20 bg-gray-600 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${(gameState.currentTurn.turnNumber / 20) * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-300">
+                    {Math.round((gameState.currentTurn.turnNumber / 20) * 100)}%
+                  </span>
+                </div>
+              </div>
               <button
                 onClick={toggleGameMode}
                 className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors"
@@ -109,9 +143,17 @@ const StoryMode: React.FC = () => {
 
       {/* Message Bar */}
       {message && (
-        <div className="bg-blue-900 bg-opacity-50 border-l-4 border-blue-400 p-4">
+        <div className={`border-l-4 p-4 ${isExecuting ? 'bg-green-900 bg-opacity-50 border-green-400' : 'bg-blue-900 bg-opacity-50 border-blue-400'}`}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-blue-200">{message}</p>
+            <div className="flex items-center">
+              {isExecuting && (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-400 mr-3"></div>
+              )}
+              <p className={isExecuting ? 'text-green-200' : 'text-blue-200'}>{message}</p>
+              {isExecuting && (
+                <span className="ml-auto text-green-300 text-sm">次のターンに進行中...</span>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -235,15 +277,26 @@ const StoryMode: React.FC = () => {
           </div>
 
           {/* Execute Button */}
-          {selectedChoice && (
+          {selectedChoice && !isExecuting && (
             <div className="flex justify-center">
               <button
                 onClick={handleExecuteChoice}
-                disabled={selectedChoice === 'custom' && !customInput.trim()}
+                disabled={(selectedChoice === 'custom' && !customInput.trim()) || isExecuting}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-all transform hover:scale-105"
               >
                 {selectedChoice === 'custom' ? 'カスタム戦略を実行' : '選択した行動を実行'}
               </button>
+            </div>
+          )}
+
+          {/* Executing Overlay */}
+          {isExecuting && (
+            <div className="flex justify-center">
+              <div className="bg-green-800 bg-opacity-50 rounded-lg p-6 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+                <p className="text-green-200 font-semibold">戦略を実行中...</p>
+                <p className="text-green-300 text-sm mt-2">結果を確認後、自動で次のターンに進みます</p>
+              </div>
             </div>
           )}
         </div>

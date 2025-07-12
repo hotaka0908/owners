@@ -79,7 +79,8 @@ export const createInitialGameState = (companyName: string): GameState => {
     storyProgress: {
       totalTurns: 0,
       completedActions: [],
-      currentSituation: `${companyName}の創業者として、あなたの壮大な旅が始まりました。世界100億人を幸せにし、時価総額世界一位を目指しましょう！`
+      currentSituation: `${companyName}の創業者として、あなたの壮大な旅が始まりました。世界100億人を幸せにし、時価総額世界一位を目指しましょう！`,
+      isGameComplete: false
     },
     currentTurn: {
       turnNumber: 1,
@@ -416,22 +417,99 @@ const applyChoiceEffects = (gameState: GameState, choice: any, outcome: any) => 
   }
   
   // Update story progress
+  const newTotalTurns = newGameState.storyProgress.totalTurns + 1;
+  
   newGameState.storyProgress = {
     ...newGameState.storyProgress,
-    totalTurns: newGameState.storyProgress.totalTurns + 1,
+    totalTurns: newTotalTurns,
     completedActions: [...newGameState.storyProgress.completedActions, choice.title],
     currentSituation: outcome.nextTurnDescription
   };
   
-  // Generate next turn
-  newGameState.currentTurn = generateNewTurn(newGameState);
+  // Check if game is complete (20 turns)
+  if (newTotalTurns >= 20) {
+    const finalResults = calculateFinalResults(newGameState);
+    newGameState.storyProgress = {
+      ...newGameState.storyProgress,
+      isGameComplete: true,
+      finalResults
+    };
+  } else {
+    // Generate next turn only if game is not complete
+    newGameState.currentTurn = generateNewTurn(newGameState);
+  }
   
   // Advance quarter occasionally
-  if (newGameState.storyProgress.totalTurns % 3 === 0) {
+  if (newTotalTurns % 3 === 0) {
     newGameState = advanceQuarter(newGameState);
   }
   
   return newGameState;
+};
+
+const calculateFinalResults = (gameState: GameState) => {
+  const { company, regions } = gameState;
+  const totalHappyPeople = regions.reduce((sum, region) => 
+    sum + (region.population * region.happinessLevel / 100), 0
+  );
+  
+  // Calculate final score based on multiple factors
+  const marketCapScore = Math.min(100, company.marketCap / 1000000000 * 10); // 100B = 100 points
+  const happinessScore = Math.min(100, totalHappyPeople / 10000000000 * 100); // 10B people = 100 points
+  const reputationScore = company.reputation;
+  const productScore = Math.min(100, gameState.products.length * 10);
+  const regionScore = Math.min(100, regions.filter(r => r.marketPenetration > 0).length * 16.67);
+  
+  const finalScore = Math.round(
+    (marketCapScore * 0.3) + 
+    (happinessScore * 0.3) + 
+    (reputationScore * 0.2) + 
+    (productScore * 0.1) + 
+    (regionScore * 0.1)
+  );
+  
+  // Determine ranking
+  let ranking: 'S' | 'A' | 'B' | 'C' | 'D';
+  if (finalScore >= 90) ranking = 'S';
+  else if (finalScore >= 80) ranking = 'A';
+  else if (finalScore >= 70) ranking = 'B';
+  else if (finalScore >= 60) ranking = 'C';
+  else ranking = 'D';
+  
+  // Generate achievements
+  const achievements: string[] = [];
+  
+  if (company.marketCap >= 1000000000000) achievements.push('🏆 兆ドル企業達成');
+  if (company.marketCap >= 100000000000) achievements.push('💰 1000億ドル企業');
+  if (totalHappyPeople >= 5000000000) achievements.push('😊 50億人を幸せに');
+  if (totalHappyPeople >= 1000000000) achievements.push('🌍 10億人の笑顔');
+  if (company.reputation >= 90) achievements.push('⭐ 企業イメージ最高評価');
+  if (gameState.products.length >= 10) achievements.push('🚀 製品開発マスター');
+  if (regions.filter(r => r.marketPenetration > 50).length >= 4) achievements.push('🌏 グローバル展開成功');
+  if (company.employees >= 1000) achievements.push('👥 大企業の仲間入り');
+  if (gameState.researchPoints >= 100) achievements.push('🔬 研究開発リーダー');
+  
+  // Generate summary
+  const summary = `${company.name}は20ターンの挑戦を終え、時価総額${formatCurrency(company.marketCap)}、${Math.round(totalHappyPeople / 1000000)}万人の人々を幸せにしました。${achievements.length}個の実績を解除し、総合評価${ranking}ランクを獲得しました！`;
+  
+  return {
+    finalScore,
+    achievements,
+    summary,
+    ranking
+  };
+};
+
+const formatCurrency = (amount: number): string => {
+  if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
+  if (amount >= 1e9) return `$${(amount / 1e9).toFixed(1)}B`;
+  if (amount >= 1e6) return `$${(amount / 1e6).toFixed(1)}M`;
+  if (amount >= 1e3) return `$${(amount / 1e3).toFixed(1)}K`;
+  return `$${amount.toFixed(0)}`;
+};
+
+export const resetGame = (companyName: string): GameState => {
+  return createInitialGameState(companyName);
 };
 
 export const switchGameMode = (gameState: GameState, mode: 'dashboard' | 'story'): GameState => {
