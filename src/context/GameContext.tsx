@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import type { ReactNode } from 'react';
 import type { GameState, ProductCategory } from '../types/game';
-import { createInitialGameState, advanceQuarter, developProduct, enterMarket } from '../game/gameLogic';
+import { createInitialGameState, advanceQuarter, developProduct, enterMarket, executeStoryChoice, switchGameMode } from '../game/gameLogic';
 
 interface GameContextType {
   gameState: GameState;
@@ -9,6 +9,8 @@ interface GameContextType {
   advanceTime: () => void;
   createProduct: (name: string, category: ProductCategory, investmentLevel: 'low' | 'medium' | 'high') => void;
   expandToMarket: (regionId: string, strategy: 'aggressive' | 'moderate' | 'conservative') => void;
+  executeChoice: (choiceId: string, customInput?: string) => void;
+  toggleGameMode: () => void;
   message: string;
 }
 
@@ -17,6 +19,8 @@ type GameAction =
   | { type: 'ADVANCE_QUARTER' }
   | { type: 'DEVELOP_PRODUCT'; payload: { name: string; category: ProductCategory; investmentLevel: 'low' | 'medium' | 'high' } }
   | { type: 'ENTER_MARKET'; payload: { regionId: string; strategy: 'aggressive' | 'moderate' | 'conservative' } }
+  | { type: 'EXECUTE_CHOICE'; payload: { choiceId: string; customInput?: string } }
+  | { type: 'TOGGLE_GAME_MODE' }
   | { type: 'UPDATE_STATE'; payload: GameState }
   | { type: 'SET_MESSAGE'; payload: string };
 
@@ -71,6 +75,26 @@ const gameReducer = (state: GameProviderState, action: GameAction): GameProvider
         message: marketResult.message
       };
     
+    case 'EXECUTE_CHOICE':
+      const choiceResult = executeStoryChoice(
+        state.gameState,
+        action.payload.choiceId,
+        action.payload.customInput
+      );
+      return {
+        ...state,
+        gameState: choiceResult.newGameState,
+        message: choiceResult.result?.message || (choiceResult.success ? '選択を実行しました。' : '選択の実行に失敗しました。')
+      };
+    
+    case 'TOGGLE_GAME_MODE':
+      const newMode = state.gameState.gameMode === 'dashboard' ? 'story' : 'dashboard';
+      return {
+        ...state,
+        gameState: switchGameMode(state.gameState, newMode),
+        message: newMode === 'story' ? 'ストーリーモードに切り替えました。' : 'ダッシュボードモードに切り替えました。'
+      };
+    
     case 'UPDATE_STATE':
       return {
         ...state,
@@ -109,12 +133,22 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     dispatch({ type: 'ENTER_MARKET', payload: { regionId, strategy } });
   };
 
+  const executeChoice = (choiceId: string, customInput?: string) => {
+    dispatch({ type: 'EXECUTE_CHOICE', payload: { choiceId, customInput } });
+  };
+
+  const toggleGameMode = () => {
+    dispatch({ type: 'TOGGLE_GAME_MODE' });
+  };
+
   const value: GameContextType = {
     gameState: state.gameState,
     startNewGame,
     advanceTime,
     createProduct,
     expandToMarket,
+    executeChoice,
+    toggleGameMode,
     message: state.message
   };
 

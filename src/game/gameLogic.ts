@@ -1,5 +1,6 @@
 import type { GameState, Company, Region, Product } from '../types/game';
 import { ProductCategory } from '../types/game';
+import { generateNewTurn, generateAIChoices, processCustomChoice } from './storyLogic';
 
 export const createInitialGameState = (companyName: string): GameState => {
   const initialCompany: Company = {
@@ -64,7 +65,7 @@ export const createInitialGameState = (companyName: string): GameState => {
     }
   ];
 
-  return {
+  const initialGameState: GameState = {
     company: initialCompany,
     regions: initialRegions,
     products: [],
@@ -73,8 +74,25 @@ export const createInitialGameState = (companyName: string): GameState => {
     globalHappiness: calculateGlobalHappiness(initialRegions),
     competitors: generateInitialCompetitors(),
     researchPoints: 10,
-    events: []
+    events: [],
+    gameMode: 'story',
+    storyProgress: {
+      totalTurns: 0,
+      completedActions: [],
+      currentSituation: `${companyName}の創業者として、あなたの壮大な旅が始まりました。世界100億人を幸せにし、時価総額世界一位を目指しましょう！`
+    },
+    currentTurn: {
+      turnNumber: 1,
+      currentSituation: `${companyName}の創業者として、あなたの壮大な旅が始まりました。世界100億人を幸せにし、時価総額世界一位を目指しましょう！`,
+      availableChoices: [],
+      customChoice: { enabled: true }
+    }
   };
+
+  // Generate initial choices
+  initialGameState.currentTurn.availableChoices = generateAIChoices(initialGameState);
+  
+  return initialGameState;
 };
 
 export const calculateGlobalHappiness = (regions: Region[]): number => {
@@ -256,5 +274,169 @@ export const enterMarket = (
     success: true, 
     newGameState, 
     message: `Successfully entered ${newRegions[regionIndex].name} market with ${strategy} strategy.` 
+  };
+};
+
+export const executeStoryChoice = (
+  gameState: GameState,
+  choiceId: string,
+  customInput?: string
+): { success: boolean; newGameState: GameState; result: any } => {
+  let selectedChoice;
+  
+  if (choiceId === 'custom-action' && customInput) {
+    selectedChoice = processCustomChoice(gameState, customInput);
+  } else {
+    selectedChoice = gameState.currentTurn.availableChoices.find(choice => choice.id === choiceId);
+  }
+  
+  if (!selectedChoice) {
+    return { success: false, newGameState: gameState, result: null };
+  }
+  
+  // Check if player has required resources
+  const canAfford = checkResourceRequirements(gameState, selectedChoice);
+  if (!canAfford.success) {
+    return { 
+      success: false, 
+      newGameState: gameState, 
+      result: { message: canAfford.message } 
+    };
+  }
+  
+  // Execute the choice and determine outcome
+  const outcome = determineOutcome(selectedChoice);
+  const newGameState = applyChoiceEffects(gameState, selectedChoice, outcome);
+  
+  return {
+    success: true,
+    newGameState,
+    result: {
+      choice: selectedChoice,
+      outcome,
+      message: outcome.description
+    }
+  };
+};
+
+const checkResourceRequirements = (gameState: GameState, choice: any) => {
+  const { company } = gameState;
+  const required = choice.requiredResources || {};
+  
+  if (required.cash && company.cash < required.cash) {
+    return { success: false, message: `資金が足りません。$${required.cash.toLocaleString()}が必要です。` };
+  }
+  
+  if (required.employees && company.employees < required.employees) {
+    return { success: false, message: `従業員が足りません。${required.employees}人が必要です。` };
+  }
+  
+  if (required.researchPoints && gameState.researchPoints < required.researchPoints) {
+    return { success: false, message: `研究ポイントが足りません。${required.researchPoints}ptが必要です。` };
+  }
+  
+  if (required.reputation && company.reputation < required.reputation) {
+    return { success: false, message: `企業イメージが足りません。${required.reputation}以上が必要です。` };
+  }
+  
+  return { success: true };
+};
+
+const determineOutcome = (choice: any) => {
+  const random = Math.random();
+  
+  // Difficulty affects success rate
+  let successRate;
+  switch (choice.difficulty) {
+    case 'easy': successRate = 0.7; break;
+    case 'medium': successRate = 0.5; break;
+    case 'hard': successRate = 0.3; break;
+    default: successRate = 0.5;
+  }
+  
+  if (random < successRate) {
+    return choice.potentialOutcomes.success;
+  } else if (random < successRate + 0.3) {
+    return choice.potentialOutcomes.partial;
+  } else {
+    return choice.potentialOutcomes.failure;
+  }
+};
+
+const applyChoiceEffects = (gameState: GameState, choice: any, outcome: any) => {
+  let newGameState = { ...gameState };
+  
+  // Deduct required resources
+  const required = choice.requiredResources || {};
+  newGameState.company = {
+    ...newGameState.company,
+    cash: newGameState.company.cash - (required.cash || 0),
+    employees: Math.max(1, newGameState.company.employees - (required.employees || 0))
+  };
+  newGameState.researchPoints = Math.max(0, newGameState.researchPoints - (required.researchPoints || 0));
+  
+  // Apply outcome effects
+  const effects = outcome.effects || {};
+  
+  newGameState.company = {
+    ...newGameState.company,
+    cash: Math.max(0, newGameState.company.cash + (effects.cash || 0)),
+    employees: Math.max(1, newGameState.company.employees + (effects.employees || 0)),
+    reputation: Math.max(0, Math.min(100, newGameState.company.reputation + (effects.reputation || 0))),
+    marketCap: Math.max(0, newGameState.company.marketCap + (effects.marketCap || 0))
+  };
+  
+  newGameState.researchPoints = Math.max(0, newGameState.researchPoints + (effects.researchPoints || 0));
+  
+  if (effects.happiness) {
+    const totalHappyPeople = newGameState.regions.reduce((sum, region) => 
+      sum + (region.population * region.happinessLevel / 100), 0
+    );
+    const newTotalHappyPeople = totalHappyPeople + effects.happiness;
+    const totalPopulation = newGameState.regions.reduce((sum, region) => sum + region.population, 0);
+    newGameState.globalHappiness = Math.min(100, Math.round(newTotalHappyPeople / totalPopulation * 100));
+  }
+  
+  // Add new products if any
+  if (effects.newProducts && effects.newProducts.length > 0) {
+    effects.newProducts.forEach((productName: string) => {
+      const newProduct: Product = {
+        id: `product-${Date.now()}-${Math.random()}`,
+        name: productName,
+        category: ProductCategory.EDUCATION,
+        developmentCost: 500000,
+        developmentTime: 1,
+        qualityScore: 85,
+        socialImpactScore: 80,
+        price: 100,
+        isReleased: true
+      };
+      newGameState.products.push(newProduct);
+    });
+  }
+  
+  // Update story progress
+  newGameState.storyProgress = {
+    ...newGameState.storyProgress,
+    totalTurns: newGameState.storyProgress.totalTurns + 1,
+    completedActions: [...newGameState.storyProgress.completedActions, choice.title],
+    currentSituation: outcome.nextTurnDescription
+  };
+  
+  // Generate next turn
+  newGameState.currentTurn = generateNewTurn(newGameState);
+  
+  // Advance quarter occasionally
+  if (newGameState.storyProgress.totalTurns % 3 === 0) {
+    newGameState = advanceQuarter(newGameState);
+  }
+  
+  return newGameState;
+};
+
+export const switchGameMode = (gameState: GameState, mode: 'dashboard' | 'story'): GameState => {
+  return {
+    ...gameState,
+    gameMode: mode
   };
 };

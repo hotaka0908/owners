@@ -60,6 +60,13 @@ export interface GameState {
   competitors: Company[];
   researchPoints: number;
   events: GameEvent[];
+  currentTurn: GameTurn;
+  gameMode: 'dashboard' | 'story';
+  storyProgress: {
+    totalTurns: number;
+    completedActions: string[];
+    currentSituation: string;
+  };
 }
 
 export interface GameEvent {
@@ -81,6 +88,51 @@ export interface EventChoice {
     happiness?: number;
     marketCap?: number;
     reputation?: number;
+  };
+}
+
+export interface ActionChoice {
+  id: string;
+  title: string;
+  description: string;
+  category: 'ai' | 'custom';
+  difficulty: 'easy' | 'medium' | 'hard';
+  requiredResources?: {
+    cash?: number;
+    employees?: number;
+    researchPoints?: number;
+    reputation?: number;
+  };
+  potentialOutcomes: {
+    success: GameEventOutcome;
+    partial: GameEventOutcome;
+    failure: GameEventOutcome;
+  };
+}
+
+export interface GameEventOutcome {
+  title: string;
+  description: string;
+  effects: {
+    cash?: number;
+    employees?: number;
+    reputation?: number;
+    marketCap?: number;
+    researchPoints?: number;
+    happiness?: number;
+    newProducts?: string[];
+    newRegions?: string[];
+  };
+  nextTurnDescription: string;
+}
+
+export interface GameTurn {
+  turnNumber: number;
+  currentSituation: string;
+  availableChoices: ActionChoice[];
+  customChoice?: {
+    enabled: boolean;
+    userInput?: string;
   };
 }
 

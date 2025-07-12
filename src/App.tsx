@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameProvider } from './context/GameContext';
 import Dashboard from './components/Dashboard';
+import StoryMode from './components/StoryMode';
 import GameSetup from './components/GameSetup';
 import { useGame } from './context/GameContext';
 
@@ -9,6 +10,10 @@ const GameContent: React.FC = () => {
   
   if (!gameState.company.name || gameState.company.name === 'My Company') {
     return <GameSetup />;
+  }
+  
+  if (gameState.gameMode === 'story') {
+    return <StoryMode />;
   }
   
   return <Dashboard />;

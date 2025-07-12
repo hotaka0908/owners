@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { ProductCategory, ProductCategoryLabels } from '../types/game';
 
 const Dashboard: React.FC = () => {
-  const { gameState, advanceTime, createProduct, expandToMarket, message } = useGame();
+  const { gameState, advanceTime, createProduct, expandToMarket, toggleGameMode, message } = useGame();
   const [selectedTab, setSelectedTab] = useState<'overview' | 'business' | 'markets' | 'finance'>('overview');
 
   const formatCurrency = (amount: number) => {
@@ -52,6 +52,12 @@ const Dashboard: React.FC = () => {
               <span className="text-sm text-gray-600">
                 Q{gameState.currentQuarter} {gameState.currentYear}
               </span>
+              <button
+                onClick={toggleGameMode}
+                className="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition-colors"
+              >
+                ストーリーモード
+              </button>
               <button
                 onClick={advanceTime}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
