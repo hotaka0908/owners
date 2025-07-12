@@ -23,19 +23,21 @@ const StoryMode: React.FC = () => {
       setShowCustomInput(false);
       setCustomInput('');
       setShowResultMessage(false);
+      // Update lastExecutedTurn to prevent repeated resets
+      setLastExecutedTurn(gameState.currentTurn.turnNumber);
     }
   }, [gameState.currentTurn.turnNumber, lastExecutedTurn]);
 
-  // Show result message briefly then hide
+  // Show result message briefly then hide, but only if we're still on the same turn
   useEffect(() => {
-    if (showResultMessage && message) {
+    if (showResultMessage && message && gameState.currentTurn.turnNumber === lastExecutedTurn) {
       const timer = setTimeout(() => {
         setShowResultMessage(false);
       }, 1500); // Show for 1.5 seconds then hide
       
       return () => clearTimeout(timer);
     }
-  }, [showResultMessage, message]);
+  }, [showResultMessage, message, gameState.currentTurn.turnNumber, lastExecutedTurn]);
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e12) return `$${(amount / 1e12).toFixed(1)}兆`;
