@@ -40,44 +40,6 @@ export const DecisionButtons: React.FC<DecisionButtonsProps> = ({
     }
   };
 
-  const getTypeLabel = (type: DecisionOption['type']): string => {
-    switch (type) {
-      case 'aggressive':
-        return '積極策';
-      case 'safe':
-        return '安全策';
-      case 'innovative':
-        return '革新策';
-      default:
-        return '一般策';
-    }
-  };
-
-  const getRiskColor = (risk: DecisionOption['risk']): string => {
-    switch (risk) {
-      case 'high':
-        return 'text-red-600 bg-red-100';
-      case 'medium':
-        return 'text-yellow-600 bg-yellow-100';
-      case 'low':
-        return 'text-green-600 bg-green-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
-    }
-  };
-
-  const getRiskText = (risk: DecisionOption['risk']): string => {
-    switch (risk) {
-      case 'high':
-        return 'ハイリスク';
-      case 'medium':
-        return 'ミドルリスク';
-      case 'low':
-        return 'ローリスク';
-      default:
-        return '不明';
-    }
-  };
 
   const formatCurrency = (amount: number): string => {
     if (amount >= 1e9) return `$${(amount / 1e9).toFixed(1)}B`;

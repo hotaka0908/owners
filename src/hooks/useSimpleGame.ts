@@ -107,7 +107,7 @@ export const useSimpleGame = () => {
   }, [gameState, usedEvents]);
 
   // 決定を実行して結果を計算
-  const executeDecision = (gameState: GameState, decision: any): DecisionResult => {
+  const executeDecision = (_gameState: GameState, decision: any): DecisionResult => {
     // リスクベースの成功判定
     const successRate = decision.risk === 'high' ? 0.6 : decision.risk === 'medium' ? 0.75 : 0.9;
     const isSuccess = Math.random() < successRate;

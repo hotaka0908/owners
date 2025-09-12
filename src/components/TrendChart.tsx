@@ -23,7 +23,6 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data }) => {
   // データの最大値と最小値を取得
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.map(d => d.value));
-  const maxPeople = Math.max(...data.map(d => d.happyPeople));
 
   // SVGのサイズ設定
   const width = 800;
@@ -146,8 +145,9 @@ export const TrendChart: React.FC<TrendChartProps> = ({ data }) => {
                 r="12"
                 fill="transparent"
                 className="hover:fill-blue-100 hover:fill-opacity-50 cursor-pointer"
-                title={`${point.month}: ${formatCurrency(point.value)}`}
-              />
+              >
+                <title>{`${point.month}: ${formatCurrency(point.value)}`}</title>
+              </circle>
             </g>
           ))}
 

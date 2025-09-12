@@ -3,13 +3,11 @@ import type { CompanyMetrics, GameEvent, DecisionOption } from '../types/simple-
 import { MetricsBar } from './MetricsBar';
 import { EventCard } from './EventCard';
 import { DecisionButtons } from './DecisionButtons';
-import { TrendChart } from './TrendChart';
 
 interface CEODashboardProps {
   company: CompanyMetrics;
   currentEvent: GameEvent | null;
   availableDecisions: DecisionOption[];
-  history: { month: string; value: number; happyPeople: number }[];
   onDecision: (decisionId: string) => void;
   isProcessing: boolean;
 }
@@ -18,7 +16,6 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
   company,
   currentEvent,
   availableDecisions,
-  history,
   onDecision,
   isProcessing
 }) => {

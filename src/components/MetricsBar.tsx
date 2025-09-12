@@ -20,26 +20,6 @@ export const MetricsBar: React.FC<MetricsBarProps> = ({ company }) => {
     return `${Math.round(count).toLocaleString()}人`;
   };
 
-  const getMarketCapColor = (marketCap: number): string => {
-    if (marketCap >= 1e12) return 'text-purple-600'; // 1兆ドル以上
-    if (marketCap >= 1e11) return 'text-green-600';  // 1000億ドル以上
-    if (marketCap >= 1e10) return 'text-blue-600';   // 100億ドル以上
-    if (marketCap >= 1e9) return 'text-emerald-600'; // 10億ドル以上
-    return 'text-gray-600';
-  };
-
-  const getCashColor = (cash: number): string => {
-    if (cash <= 1e6) return 'text-red-600';    // 100万ドル以下は危険
-    if (cash <= 1e7) return 'text-amber-600';  // 1000万ドル以下は注意
-    return 'text-gray-900';
-  };
-
-  const getHappinessColor = (people: number): string => {
-    if (people >= 1e9) return 'text-purple-600';  // 10億人以上
-    if (people >= 1e8) return 'text-green-600';   // 1億人以上
-    if (people >= 1e7) return 'text-blue-600';    // 1000万人以上
-    return 'text-gray-600';
-  };
 
   return (
     <div className="grid grid-cols-3 gap-4">

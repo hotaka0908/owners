@@ -53,12 +53,7 @@ export interface GameState {
   company: CompanyMetrics;
   currentEvent: GameEvent | null;
   availableDecisions: DecisionOption[];
-  history: {
-    month: number;
-    year: number;
-    marketCap: number;
-    happyPeople: number;
-  }[];
+  history: MarketCapHistoryPoint[];
   gamePhase: 'setup' | 'playing' | 'completed';
   isProcessing: boolean;
 }

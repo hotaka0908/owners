@@ -1,4 +1,3 @@
-import React from 'react';
 import { CEODashboard } from './components/CEODashboard';
 import { SimpleGameSetup } from './components/SimpleGameSetup';
 import { useSimpleGame } from './hooks/useSimpleGame';
@@ -85,7 +84,6 @@ function SimpleApp() {
       company={gameState.company}
       currentEvent={gameState.currentEvent}
       availableDecisions={gameState.availableDecisions}
-      history={gameState.history}
       onDecision={makeDecision}
       isProcessing={gameState.isProcessing}
     />

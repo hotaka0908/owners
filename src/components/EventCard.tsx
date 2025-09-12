@@ -29,46 +29,6 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isProcessing }) => 
     }
   };
 
-  const getUrgencyBadge = (urgency: GameEvent['urgency']) => {
-    const baseClasses = "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium";
-    
-    switch (urgency) {
-      case 'high':
-        return `${baseClasses} bg-red-100 text-red-800`;
-      case 'medium':
-        return `${baseClasses} bg-yellow-100 text-yellow-800`;
-      default:
-        return `${baseClasses} bg-green-100 text-green-800`;
-    }
-  };
-
-  const getUrgencyText = (urgency: GameEvent['urgency']): string => {
-    switch (urgency) {
-      case 'high':
-        return '緊急';
-      case 'medium':
-        return '重要';
-      default:
-        return '通常';
-    }
-  };
-
-  const getCategoryText = (category: GameEvent['category']): string => {
-    switch (category) {
-      case 'product':
-        return '製品開発';
-      case 'market':
-        return '市場展開';
-      case 'finance':
-        return '財務';
-      case 'operations':
-        return '事業運営';
-      case 'external':
-        return '外部環境';
-      default:
-        return '一般';
-    }
-  };
 
   return (
     <div className={`rounded-xl shadow-xl border-l-8 ${getImpactColor(event.impact)} transition-all duration-500 transform hover:scale-105 ${isProcessing ? 'opacity-75 animate-pulse' : ''}`}>
