@@ -1,9 +1,9 @@
 {
-  "name": "global-happiness-corp",
+  "name": "owners",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Business simulation game: Build a company that makes 10 billion people happy while achieving world's highest market cap",
+  "description": "Owners - Business simulation game: Build a company that makes 10 billion people happy while achieving world's highest market cap",
   "author": "hotaka0908",
   "license": "MIT",
   "repository": {

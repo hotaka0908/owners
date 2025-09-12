@@ -1,4 +1,4 @@
-# Global Happiness Corp 🌍😊
+# Owners 🌍😊
 
 A business simulation game where you build a company to make 10 billion people happy while achieving the world's highest market cap.
 
@@ -38,7 +38,7 @@ A business simulation game where you build a company to make 10 billion people h
 ```bash
 # Clone the repository
 git clone https://github.com/hotaka0908/owners.git
-cd owners/global-happiness-corp
+cd owners
 
 # Install dependencies
 npm install
