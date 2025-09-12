@@ -1,104 +1,132 @@
 # Owners 🌍😊
 
-A business simulation game where you build a company to make 10 billion people happy while achieving the world's highest market cap.
+世界最高の時価総額を達成しながら、100億人を幸せにする企業を築くビジネスシミュレーションゲーム
 
-## 🎯 Game Objective
+## 🎯 ゲームの目的
 
-**Dual Goals:**
-- 💰 Achieve the world's highest market capitalization
-- 😊 Make 10 billion people happy through your products and services
+**2つの最終目標:**
+- 💰 世界最高の時価総額を達成する
+- 😊 あなたの製品とサービスを通じて100億人を幸せにする
 
-## 🎮 How to Play
+## 🎮 遊び方
 
-1. **Start Your Company**: Enter your company name and begin your journey
-2. **Develop Products**: Create products in 6 categories (Education, Healthcare, Entertainment, Communication, Transportation, Environment)
-3. **Expand Globally**: Enter 6 regional markets (North America, Europe, Asia, Africa, South America, Oceania)
-4. **Manage Finances**: Track revenue, profit, and market cap growth
-5. **Advance Time**: Progress through quarters and years to grow your empire
+1. **会社を設立**: 会社名を入力して、あなたの旅を始める
+2. **製品開発**: 6つのカテゴリ（教育、ヘルスケア、エンターテイメント、コミュニケーション、交通、環境）で製品を作る
+3. **グローバル展開**: 6つの地域市場（北米、ヨーロッパ、アジア、アフリカ、南米、オセアニア）に進出
+4. **財務管理**: 収益、利益、時価総額の成長を追跡
+5. **時間進行**: 四半期と年を通じて、あなたの帝国を成長させる
 
-## 🚀 Features
+## 🚀 特徴
 
-- **Real-time Business Simulation**: Dynamic market conditions and financial calculations
-- **Global Impact Tracking**: Monitor happiness levels across different regions
-- **Product Development**: Create products with varying quality and social impact
-- **Market Strategy**: Choose aggressive, moderate, or conservative expansion strategies
-- **Competition**: Compete against other global corporations
-- **Responsive Design**: Play on desktop, tablet, or mobile
+- **リアルタイム経営シミュレーション**: 動的な市場環境と財務計算
+- **グローバル影響度追跡**: 各地域の幸福度レベルを監視
+- **製品開発システム**: 品質と社会的影響が異なる製品作成
+- **市場戦略**: 積極的、中道、保守的な拡大戦略から選択
+- **競合システム**: 他のグローバル企業と競争
+- **レスポンシブデザイン**: デスクトップ、タブレット、モバイルで対応
 
-## 🛠️ Tech Stack
+## 🛠️ 技術スタック
 
-- **Frontend**: React 18 + TypeScript
-- **Styling**: Tailwind CSS
-- **State Management**: React Context API
-- **Build Tool**: Vite
-- **Deployment**: Vercel
+- **フロントエンド**: React 18 + TypeScript
+- **スタイリング**: Tailwind CSS
+- **状態管理**: React Context API
+- **ビルドツール**: Vite
+- **デプロイ**: Vercel
 
-## 📦 Installation
+## 📦 インストール
 
 ```bash
-# Clone the repository
+# リポジトリをクローン
 git clone https://github.com/hotaka0908/owners.git
 cd owners
 
-# Install dependencies
+# 依存関係をインストール
 npm install
 
-# Start development server
+# 開発サーバーを起動
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to play the game.
+[http://localhost:5173](http://localhost:5173) を開いてゲームをプレイしてください。
 
-## 🏗️ Build & Deploy
+## 🏗️ ビルドとデプロイ
 
 ```bash
-# Build for production
+# 本番用ビルド
 npm run build
 
-# Preview production build
+# 本番ビルドのプレビュー
 npm run preview
 ```
 
-## 🎲 Game Mechanics
+## 🎲 ゲーム仕組み
 
-### Company Metrics
-- **Market Cap**: Your company's market value (goal: become #1 globally)
-- **Cash Flow**: Revenue, profit, and available cash for investments
-- **Reputation**: Public perception affecting market performance
-- **Employees**: Team size impacting research and development
+### 企業指標
+- **時価総額**: あなたの会社の市場価値（目標：世界1位になること）
+- **キャッシュフロー**: 収益、利益、投資に利用可能な現金
+- **評判**: 市場パフォーマンスに影響する世間の評価
+- **従業員**: 研究開発に影響するチームの規模
 
-### Products & Innovation
-- **6 Product Categories**: Each with different social impact potential
-- **Quality vs Cost**: Balance development investment with product quality
-- **Social Impact Score**: How much your products improve people's lives
-- **Research Points**: Invest in R&D for better products and efficiency
+### 製品とイノベーション
+- **6つの製品カテゴリ**: それぞれ異なる社会的影響のポテンシャル
+- **品質対コスト**: 開発投資と製品品質のバランス
+- **社会影響スコア**: あなたの製品がどれだけ人々の生活を改善するか
+- **研究ポイント**: より良い製品と効率性のためのR&D投資
 
-### Global Markets
-- **Regional Differences**: Each region has unique population, GDP, and happiness levels
-- **Market Penetration**: Gradually expand your presence in each region
-- **Local Impact**: Products improve regional happiness based on quality and penetration
+### グローバル市場
+- **地域の違い**: 各地域は独特の人口、GDP、幸福度レベルを持つ
+- **市場浸透**: 各地域でのプレゼンスを段階的に拡大
+- **地域への影響**: 製品の品質と浸透度に基づいて地域の幸福度を向上
 
-### Time Progression
-- **Quarterly Updates**: Financial results and market changes every quarter
-- **Annual Reviews**: Track long-term growth and global impact
-- **Dynamic Events**: Random challenges and opportunities
+### 時間の進行
+- **四半期更新**: 四半期ごとの財務結果と市場変化
+- **年次レビュー**: 長期的な成長とグローバル影響を追跡
+- **動的イベント**: ランダムな課題と機会
 
-## 🌟 Strategy Tips
+## 🌟 戦略のコツ
 
-1. **Start Local**: Focus on one region before expanding globally
-2. **Quality Matters**: Higher quality products create more happiness and loyalty
-3. **Balance Growth**: Don't sacrifice profitability for expansion
-4. **Social Impact**: Products with high social impact improve reputation
-5. **Research Investment**: Allocate resources to R&D for competitive advantage
+1. **地域から始める**: グローバル展開する前に一つの地域に集中
+2. **品質が重要**: 高品質な製品はより多くの幸福度と忠誠心を生む
+3. **成長のバランス**: 拡大のために収益性を犠牲にしない
+4. **社会的影響**: 社会的影響の高い製品は評判を向上させる
+5. **研究投資**: 競争優位のためにR&Dにリソースを配分
 
-## 🤝 Contributing
+## 🎯 ゲームの詳細な内容説明
 
-This is an educational project demonstrating business simulation game development. Feel free to fork and enhance!
+このゲームは複雑なビジネス戦略シミュレーターです：
 
-## 📄 License
+### 📈 経済システム
+- **市場動向**: 各地域の経済状況が製品販売に影響
+- **競合分析**: AIが制御する競合他社との市場シェア争い
+- **価格戦略**: 製品価格設定による売上と市場浸透への影響
+- **投資収益**: R&D、マーケティング、設備投資による長期的な成果
 
-MIT License - Feel free to use this project for learning and educational purposes.
+### 🌍 グローバル展開システム
+- **文化的適応**: 各地域の文化的特性に合わせた製品カスタマイズ
+- **規制環境**: 地域ごとの法規制による事業への制約
+- **為替リスク**: 国際的な通貨変動による収益への影響
+- **物流コスト**: グローバル展開に伴う配送・流通コストの管理
+
+### 🏭 製品開発プロセス
+- **イノベーション段階**: 基礎研究→応用開発→製品化→市場投入
+- **品質管理**: 製品の信頼性向上による顧客満足度とリピート率向上
+- **特許戦略**: 知的財産による競争優位の確保
+- **持続可能性**: 環境に配慮した製品開発による ESG 評価向上
+
+### 👥 組織マネジメント
+- **人材育成**: 従業員のスキル向上による生産性アップ
+- **企業文化**: 働きがいのある環境作りによる離職率低下
+- **多様性**: ダイバーシティ推進による創造性とイノベーション促進
+- **リーダーシップ**: 経営陣の意思決定がすべての事業活動に影響
+
+## 🤝 コントリビューション
+
+これはビジネスシミュレーションゲーム開発を実証する教育プロジェクトです。自由にフォークして改良してください！
+
+## 📄 ライセンス
+
+MIT ライセンス - 学習と教育目的でのご利用を歓迎します。
 
 ---
 
-**🎮 Ready to change the world? Start your company and make 10 billion people happy!**
+**🎮 世界を変える準備はできましたか？あなたの会社を始めて100億人を幸せにしましょう！**
