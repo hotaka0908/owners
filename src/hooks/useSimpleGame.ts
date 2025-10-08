@@ -109,7 +109,8 @@ export const useSimpleGame = () => {
         gamePhase: isGameOver ? 'completed' : 'playing',
         isProcessing: false,
         pastDecisions: [...gameState.pastDecisions, decisionId],
-        turnCount: newTurnCount
+        turnCount: newTurnCount,
+        lastDecisionResult: result
       });
 
       if (nextEvent) {
@@ -166,7 +167,8 @@ export const useSimpleGame = () => {
         happyPeopleChange: Math.round(lerp(effects.happyPeopleChange.min, effects.happyPeopleChange.max, Math.random()) * multiplier),
         reputationChange: Math.round(lerp(effects.reputationChange.min, effects.reputationChange.max, Math.random()) * multiplier),
         employeesChange: Math.round(lerp(effects.employeesChange.min, effects.employeesChange.max, Math.random()) * multiplier)
-      }
+      },
+      educationalFeedback: generateEducationalFeedback(decision, isSuccess, currentGameState)
     };
   };
 
@@ -206,6 +208,61 @@ export const useSimpleGame = () => {
     if (company.marketCap >= 50000000000) return 'scale'; // $50B以上
     if (company.marketCap >= 1000000000) return 'growth'; // $1B以上
     return 'startup';
+  };
+
+  // 教育的フィードバックを生成
+  const generateEducationalFeedback = (decision: any, success: boolean, currentGameState: GameState) => {
+    const feedbackDatabase = {
+      aggressive: {
+        success: {
+          why: "市場のタイミングと大胆な投資がマッチしました",
+          lesson: "高リスク・高リターン戦略は成功すれば大きな成果を生みます",
+          tip: "積極戦略を続けるとシナジー効果で成功率が上がります"
+        },
+        failure: {
+          why: "リソースを一点集中しすぎて柔軟性を失いました",
+          lesson: "積極策はリスク管理と並行して行うことが重要です",
+          tip: "次回は安全策と組み合わせてバランスを取りましょう"
+        }
+      },
+      safe: {
+        success: {
+          why: "着実な成長戦略が市場の信頼を獲得しました",
+          lesson: "安定経営は長期的な成功の基盤となります",
+          tip: "安全策の積み重ねで企業の基礎体力が向上します"
+        },
+        failure: {
+          why: "慎重すぎて市場機会を逃してしまいました",
+          lesson: "時には適度なリスクテイクも必要です",
+          tip: "革新的な選択肢も検討してみましょう"
+        }
+      },
+      innovative: {
+        success: {
+          why: "革新的なアプローチが市場に新しい価値を提供しました",
+          lesson: "イノベーションは競争優位性の源泉です",
+          tip: "AI/技術投資を続けるとイノベーション力が強化されます"
+        },
+        failure: {
+          why: "市場がまだ革新に対する準備ができていませんでした",
+          lesson: "イノベーションにはタイミングと市場理解が必要です",
+          tip: "段階的なアプローチで市場を育てることも重要です"
+        }
+      }
+    };
+
+    const baseFeedback = feedbackDatabase[decision.type as keyof typeof feedbackDatabase][success ? 'success' : 'failure'];
+
+    // シナジー効果のヒントを追加
+    const synergyCount = currentGameState.pastDecisions.filter(d =>
+      d.includes(decision.type) || d.includes(decision.id.split('-')[0])
+    ).length;
+
+    if (synergyCount >= 2) {
+      baseFeedback.tip = `${baseFeedback.tip}（現在のシナジーボーナス: +${(synergyCount * 15)}%）`;
+    }
+
+    return baseFeedback;
   };
 
   // 結果メッセージを生成

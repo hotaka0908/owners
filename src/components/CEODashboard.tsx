@@ -1,8 +1,9 @@
 import React from 'react';
-import type { CompanyMetrics, GameEvent, DecisionOption } from '../types/simple-game';
+import type { CompanyMetrics, GameEvent, DecisionOption, DecisionResult } from '../types/simple-game';
 import { MetricsBar } from './MetricsBar';
 import { EventCard } from './EventCard';
 import { DecisionButtons } from './DecisionButtons';
+import { EducationalFeedback } from './EducationalFeedback';
 
 interface CEODashboardProps {
   company: CompanyMetrics;
@@ -11,6 +12,7 @@ interface CEODashboardProps {
   onDecision: (decisionId: string) => void;
   isProcessing: boolean;
   turnCount?: number;
+  lastDecisionResult?: DecisionResult;
 }
 
 export const CEODashboard: React.FC<CEODashboardProps> = ({
@@ -19,7 +21,8 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
   availableDecisions,
   onDecision,
   isProcessing,
-  turnCount = 0
+  turnCount = 0,
+  lastDecisionResult
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-green-100">
@@ -82,6 +85,11 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Educational Feedback from Last Decision */}
+        {lastDecisionResult && lastDecisionResult.educationalFeedback && !isProcessing && (
+          <EducationalFeedback feedback={lastDecisionResult.educationalFeedback} />
+        )}
 
         {/* Current Event */}
         {currentEvent && (

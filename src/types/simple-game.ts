@@ -49,6 +49,11 @@ export interface DecisionResult {
     employeesChange: number;
   };
   nextEvent?: GameEvent;
+  educationalFeedback?: {
+    why: string; // なぜこの結果になったか
+    lesson: string; // 学べること
+    tip: string; // 次回のヒント
+  };
 }
 
 export interface GameState {
@@ -60,6 +65,7 @@ export interface GameState {
   isProcessing: boolean;
   pastDecisions: string[]; // 過去の決定IDを記録
   turnCount: number; // ターン数
+  lastDecisionResult?: DecisionResult; // 最後の決定結果（フィードバック表示用）
 }
 
 export interface MarketCapHistoryPoint {

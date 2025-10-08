@@ -201,6 +201,7 @@ function SimpleApp() {
       onDecision={makeDecision}
       isProcessing={gameState.isProcessing}
       turnCount={gameState.turnCount}
+      lastDecisionResult={gameState.lastDecisionResult}
     />
   );
 }
