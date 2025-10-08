@@ -25,6 +25,110 @@ export const STARTUP_EVENTS: GameEvent[] = [
     impact: 'negative',
     urgency: 'high',
     category: 'external'
+  },
+  {
+    id: 'office-space-decision',
+    title: '🏢 オフィススペースの選択',
+    description: '事業拡大に向けて新しいオフィスが必要です。コワーキングスペース、レンタルオフィス、自社物件のどれを選びますか？',
+    impact: 'neutral',
+    urgency: 'medium',
+    category: 'operations'
+  },
+  {
+    id: 'early-customer-feedback',
+    title: '📊 初期ユーザーからのフィードバック',
+    description: 'ベータテスターから厳しいフィードバックが届きました。製品の方向性を見直すべきでしょうか？',
+    impact: 'neutral',
+    urgency: 'high',
+    category: 'product'
+  },
+  {
+    id: 'angel-investor-interest',
+    title: '💰 エンジェル投資家からの関心',
+    description: '著名なエンジェル投資家があなたのビジョンに興味を示しています。資金調達のチャンスです。',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'finance'
+  },
+  {
+    id: 'technical-debt-crisis',
+    title: '⚠️ 技術的負債の蓄積',
+    description: '急速な開発でコードベースが複雑化。今リファクタリングすべきか、機能開発を優先すべきか。',
+    impact: 'negative',
+    urgency: 'medium',
+    category: 'product'
+  },
+  {
+    id: 'media-coverage-opportunity',
+    title: '📰 メディア取材のオファー',
+    description: '大手ビジネスメディアから取材依頼が来ました。露出のチャンスですが準備時間が必要です。',
+    impact: 'positive',
+    urgency: 'high',
+    category: 'external'
+  },
+  {
+    id: 'cofounder-conflict',
+    title: '👔 共同創業者との意見対立',
+    description: '共同創業者と事業の方向性について意見が分かれています。どのように対処しますか？',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'operations'
+  },
+  {
+    id: 'first-paying-customer',
+    title: '🎉 初の有料顧客獲得',
+    description: '最初の有料顧客を獲得しました！この勢いをどう活かしますか？',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'market'
+  },
+  {
+    id: 'server-downtime',
+    title: '🔧 サーバー障害発生',
+    description: '予期せぬサーバー障害でサービスが停止。ユーザーからの苦情が殺到しています。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'product'
+  },
+  {
+    id: 'accelerator-program-invite',
+    title: '🚀 アクセラレータープログラムへの招待',
+    description: '有名なスタートアップアクセラレーターから参加のオファーが届きました。',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'external'
+  },
+  {
+    id: 'pricing-strategy-debate',
+    title: '💵 価格戦略の決定',
+    description: '製品の価格設定をどうするか？フリーミアム、サブスクリプション、従量課金？',
+    impact: 'neutral',
+    urgency: 'high',
+    category: 'finance'
+  },
+  {
+    id: 'security-vulnerability',
+    title: '🔒 セキュリティ脆弱性の発見',
+    description: 'セキュリティ研究者から重大な脆弱性の報告が。早急な対応が必要です。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'product'
+  },
+  {
+    id: 'key-employee-resignation',
+    title: '😢 重要メンバーの退職通知',
+    description: '創業メンバーの1人が退職を申し出ました。引き留めるべきか、新しい人材を探すべきか。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'operations'
+  },
+  {
+    id: 'industry-conference',
+    title: '🎤 業界カンファレンスでのプレゼン機会',
+    description: '大規模な業界カンファレンスでプレゼンする機会が。準備に時間がかかりますが露出効果は大きいです。',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'external'
   }
 ];
 
@@ -51,6 +155,110 @@ export const GROWTH_EVENTS: GameEvent[] = [
     description: '政府がデータ処理方法を審査開始。コンプライアンス対応が急務です。',
     impact: 'negative',
     urgency: 'high',
+    category: 'external'
+  },
+  {
+    id: 'enterprise-client-opportunity',
+    title: '🏦 大企業からの契約提案',
+    description: 'Fortune 500企業があなたのサービスの導入を検討中。大型契約のチャンスです。',
+    impact: 'positive',
+    urgency: 'high',
+    category: 'market'
+  },
+  {
+    id: 'talent-war',
+    title: '⚔️ 人材獲得競争',
+    description: '競合他社が高給で優秀な従業員を引き抜こうとしています。対抗策が必要です。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'operations'
+  },
+  {
+    id: 'product-line-expansion',
+    title: '🎯 新製品ラインの検討',
+    description: '既存顧客から関連製品の要望が多数。新しい製品ラインを開発すべきか？',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'product'
+  },
+  {
+    id: 'market-downturn',
+    title: '📉 市場全体の低迷',
+    description: '経済不況で市場全体が縮小。コスト削減か、逆張り投資か。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'external'
+  },
+  {
+    id: 'partnership-proposal',
+    title: '🤝 戦略的パートナーシップの提案',
+    description: '業界リーダーから戦略的提携の提案が。市場アクセスが広がりますが独立性は失われます。',
+    impact: 'neutral',
+    urgency: 'medium',
+    category: 'external'
+  },
+  {
+    id: 'data-breach-attempt',
+    title: '🚨 サイバー攻撃の試み',
+    description: 'ハッカーグループからの攻撃を検知。セキュリティ投資の強化が必要です。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'product'
+  },
+  {
+    id: 'international-expansion-interest',
+    title: '🌏 海外市場からの引き合い',
+    description: 'ヨーロッパ市場からの問い合わせが急増。海外展開を始めるべきでしょうか？',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'market'
+  },
+  {
+    id: 'brand-reputation-crisis',
+    title: '📢 SNSでの炎上',
+    description: '製品の一部機能が批判され、SNSで炎上。早急な対応が求められます。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'external'
+  },
+  {
+    id: 'innovation-breakthrough',
+    title: '💡 技術的ブレークスルー',
+    description: 'R&Dチームが画期的な技術を開発。特許申請と商品化を急ぐべきです。',
+    impact: 'positive',
+    urgency: 'high',
+    category: 'product'
+  },
+  {
+    id: 'executive-recruitment',
+    title: '👔 経験豊富なCFO候補',
+    description: '大手企業のCFOがあなたの会社に興味を示しています。採用すべきでしょうか？',
+    impact: 'positive',
+    urgency: 'medium',
+    category: 'operations'
+  },
+  {
+    id: 'office-expansion-needed',
+    title: '🏗️ オフィス拡張の必要性',
+    description: '急成長で現在のオフィスが手狭に。移転、増床、リモート化のどれを選ぶ？',
+    impact: 'neutral',
+    urgency: 'medium',
+    category: 'operations'
+  },
+  {
+    id: 'customer-churn-increase',
+    title: '😰 顧客離脱率の上昇',
+    description: '既存顧客の解約率が急上昇。顧客満足度向上への投資が必要です。',
+    impact: 'negative',
+    urgency: 'high',
+    category: 'market'
+  },
+  {
+    id: 'industry-award-nomination',
+    title: '🏆 業界賞へのノミネート',
+    description: 'あなたの会社が「最も革新的なスタートアップ賞」にノミネートされました！',
+    impact: 'positive',
+    urgency: 'low',
     category: 'external'
   }
 ];
@@ -231,6 +439,150 @@ export const GROWTH_DECISIONS: Record<string, DecisionOption[]> = {
   ]
 };
 
+export const SCALE_DECISIONS: Record<string, DecisionOption[]> = {
+  'global-expansion': [
+    {
+      id: 'full-localization',
+      type: 'aggressive',
+      title: '完全ローカライゼーション',
+      description: '現地チームを雇用し、文化に完全適応したサービスを展開',
+      cost: 50000000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: 100000000, max: 500000000 },
+        cashChange: { min: -50000000, max: -50000000 },
+        happyPeopleChange: { min: 10000000, max: 50000000 },
+        reputationChange: { min: 15, max: 30 },
+        employeesChange: { min: 100, max: 500 }
+      }
+    },
+    {
+      id: 'partnership-expansion',
+      type: 'safe',
+      title: 'パートナーシップ戦略',
+      description: '現地企業と提携してリスクを分散',
+      cost: 20000000,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 40000000, max: 200000000 },
+        cashChange: { min: -20000000, max: -20000000 },
+        happyPeopleChange: { min: 5000000, max: 20000000 },
+        reputationChange: { min: 5, max: 15 },
+        employeesChange: { min: 30, max: 150 }
+      }
+    },
+    {
+      id: 'ai-translation',
+      type: 'innovative',
+      title: 'AI自動ローカライゼーション',
+      description: '最新AI技術で低コスト・高速展開を実現',
+      cost: 30000000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 80000000, max: 400000000 },
+        cashChange: { min: -30000000, max: -30000000 },
+        happyPeopleChange: { min: 8000000, max: 35000000 },
+        reputationChange: { min: 20, max: 35 },
+        employeesChange: { min: 50, max: 250 }
+      }
+    }
+  ],
+  'acquisition-offer': [
+    {
+      id: 'reject-maintain-independence',
+      type: 'aggressive',
+      title: '買収を拒否し独立を維持',
+      description: '自社の成長を信じて、独立路線を貫く',
+      cost: 0,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: -50000000, max: 300000000 },
+        cashChange: { min: 0, max: 0 },
+        happyPeopleChange: { min: 0, max: 10000000 },
+        reputationChange: { min: -10, max: 20 },
+        employeesChange: { min: -50, max: 100 }
+      }
+    },
+    {
+      id: 'accept-acquisition',
+      type: 'safe',
+      title: '買収を受け入れる',
+      description: '巨大プラットフォームの一部となり安定を得る',
+      cost: 0,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 500000000, max: 1000000000 },
+        cashChange: { min: 100000000, max: 100000000 },
+        happyPeopleChange: { min: 20000000, max: 100000000 },
+        reputationChange: { min: -20, max: 10 },
+        employeesChange: { min: 200, max: 1000 }
+      }
+    },
+    {
+      id: 'negotiate-partnership',
+      type: 'innovative',
+      title: '戦略的パートナーシップを交渉',
+      description: '買収ではなく協力関係を提案し、両者の利益を最大化',
+      cost: 0,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 200000000, max: 800000000 },
+        cashChange: { min: 50000000, max: 50000000 },
+        happyPeopleChange: { min: 30000000, max: 80000000 },
+        reputationChange: { min: 10, max: 30 },
+        employeesChange: { min: 100, max: 500 }
+      }
+    }
+  ],
+  'social-impact-opportunity': [
+    {
+      id: 'full-commitment-nonprofit',
+      type: 'aggressive',
+      title: '全力でWHOプロジェクトに参加',
+      description: '主力チームを投入して人類への貢献を最優先',
+      cost: 30000000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: -20000000, max: 100000000 },
+        cashChange: { min: -30000000, max: -30000000 },
+        happyPeopleChange: { min: 100000000, max: 500000000 },
+        reputationChange: { min: 30, max: 50 },
+        employeesChange: { min: 50, max: 200 }
+      }
+    },
+    {
+      id: 'decline-focus-business',
+      type: 'safe',
+      title: '丁重に断り、ビジネスに集中',
+      description: '企業成長を優先し、将来のより大きな貢献を目指す',
+      cost: 0,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 50000000, max: 200000000 },
+        cashChange: { min: 0, max: 0 },
+        happyPeopleChange: { min: -10000000, max: 5000000 },
+        reputationChange: { min: -15, max: 5 },
+        employeesChange: { min: 20, max: 100 }
+      }
+    },
+    {
+      id: 'hybrid-approach',
+      type: 'innovative',
+      title: 'ハイブリッド戦略',
+      description: '一部のリソースで協力し、ビジネスと社会貢献を両立',
+      cost: 15000000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 30000000, max: 300000000 },
+        cashChange: { min: -15000000, max: -15000000 },
+        happyPeopleChange: { min: 50000000, max: 200000000 },
+        reputationChange: { min: 20, max: 40 },
+        employeesChange: { min: 50, max: 300 }
+      }
+    }
+  ]
+};
+
 // イベント選択ロジック
 export const selectRandomEvent = (phase: 'startup' | 'growth' | 'scale', usedEvents: string[]): GameEvent | null => {
   let availableEvents: GameEvent[] = [];
@@ -259,5 +611,5 @@ export const selectRandomEvent = (phase: 'startup' | 'growth' | 'scale', usedEve
 
 // 決定オプション取得
 export const getDecisionsForEvent = (eventId: string): DecisionOption[] => {
-  return STARTUP_DECISIONS[eventId] || GROWTH_DECISIONS[eventId] || [];
+  return STARTUP_DECISIONS[eventId] || GROWTH_DECISIONS[eventId] || SCALE_DECISIONS[eventId] || [];
 };

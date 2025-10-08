@@ -42,17 +42,51 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
         {/* Metrics Bar */}
         <MetricsBar company={company} />
 
+        {/* Financial Summary */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl shadow-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-gray-600">月間収益</div>
+                <div className="text-xl font-bold text-green-600">
+                  ${company.revenue >= 1e9
+                    ? `${(company.revenue / 1e9).toFixed(2)}B`
+                    : company.revenue >= 1e6
+                    ? `${(company.revenue / 1e6).toFixed(2)}M`
+                    : `${(company.revenue / 1e3).toFixed(1)}K`}
+                </div>
+              </div>
+              <div className="text-3xl">💵</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-gray-600">月間利益</div>
+                <div className={`text-xl font-bold ${company.monthlyProfit >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                  {company.monthlyProfit >= 0 ? '+' : ''}${company.monthlyProfit >= 1e9
+                    ? `${(company.monthlyProfit / 1e9).toFixed(2)}B`
+                    : company.monthlyProfit >= 1e6
+                    ? `${(company.monthlyProfit / 1e6).toFixed(2)}M`
+                    : `${(company.monthlyProfit / 1e3).toFixed(1)}K`}
+                </div>
+              </div>
+              <div className="text-3xl">{company.monthlyProfit >= 0 ? '📈' : '📉'}</div>
+            </div>
+          </div>
+        </div>
+
         {/* Current Event */}
         {currentEvent && (
-          <EventCard 
-            event={currentEvent} 
+          <EventCard
+            event={currentEvent}
             isProcessing={isProcessing}
           />
         )}
 
         {/* Decision Buttons */}
         {availableDecisions.length > 0 && (
-          <DecisionButtons 
+          <DecisionButtons
             decisions={availableDecisions}
             onDecision={onDecision}
             disabled={isProcessing}

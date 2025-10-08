@@ -10,7 +10,9 @@ const INITIAL_COMPANY: CompanyMetrics = {
   reputation: 50,
   employees: 1,
   month: 1,
-  year: 2024
+  year: 2024,
+  revenue: 0,
+  monthlyProfit: 0
 };
 
 const INITIAL_GAME_STATE: Omit<GameState, 'company'> = {
@@ -18,7 +20,9 @@ const INITIAL_GAME_STATE: Omit<GameState, 'company'> = {
   availableDecisions: [],
   history: [],
   gamePhase: 'setup',
-  isProcessing: false
+  isProcessing: false,
+  pastDecisions: [],
+  turnCount: 0
 };
 
 export const useSimpleGame = () => {
@@ -32,7 +36,7 @@ export const useSimpleGame = () => {
   const startGame = useCallback((companyName: string) => {
     const newCompany = { ...INITIAL_COMPANY, name: companyName };
     const firstEvent = selectRandomEvent('startup', []);
-    
+
     setGameState({
       company: newCompany,
       currentEvent: firstEvent,
@@ -43,9 +47,11 @@ export const useSimpleGame = () => {
         happyPeople: newCompany.happyPeople
       }],
       gamePhase: 'playing',
-      isProcessing: false
+      isProcessing: false,
+      pastDecisions: [],
+      turnCount: 0
     });
-    
+
     if (firstEvent) {
       setUsedEvents([firstEvent.id]);
     }
@@ -83,7 +89,11 @@ export const useSimpleGame = () => {
       
       // 次のイベントを選択
       const nextEvent = selectRandomEvent(gamePhase, usedEvents);
-      
+      const newTurnCount = gameState.turnCount + 1;
+
+      // ゲーム終了条件: 20ターンまたは資金枯渇
+      const isGameOver = newTurnCount >= 20 || updatedCompany.cash <= 0 || !nextEvent;
+
       setGameState({
         company: updatedCompany,
         currentEvent: nextEvent,
@@ -96,8 +106,10 @@ export const useSimpleGame = () => {
             happyPeople: updatedCompany.happyPeople
           }
         ].slice(-12), // 直近12ヶ月分のみ保持
-        gamePhase: nextEvent ? 'playing' : 'completed',
-        isProcessing: false
+        gamePhase: isGameOver ? 'completed' : 'playing',
+        isProcessing: false,
+        pastDecisions: [...gameState.pastDecisions, decisionId],
+        turnCount: newTurnCount
       });
 
       if (nextEvent) {
@@ -106,15 +118,45 @@ export const useSimpleGame = () => {
     }, 1500); // 1.5秒の遅延
   }, [gameState, usedEvents]);
 
+  // シナジー効果を計算
+  const calculateSynergyBonus = (decision: any, pastDecisions: string[]): number => {
+    let synergyBonus = 1.0;
+
+    // AI関連のシナジー
+    if (decision.id.includes('ai') || decision.id.includes('innovative')) {
+      const aiDecisions = pastDecisions.filter(d => d.includes('ai') || d.includes('innovative')).length;
+      synergyBonus += aiDecisions * 0.15; // AI投資の累積効果
+    }
+
+    // 安全戦略のシナジー
+    if (decision.type === 'safe') {
+      const safeDecisions = pastDecisions.filter(d => d.includes('safe') || d.includes('gradual')).length;
+      synergyBonus += safeDecisions * 0.1; // 安定性ボーナス
+    }
+
+    // 積極戦略のシナジー
+    if (decision.type === 'aggressive') {
+      const aggressiveDecisions = pastDecisions.filter(d => d.includes('aggressive') || d.includes('full')).length;
+      synergyBonus += aggressiveDecisions * 0.12; // 大胆さボーナス
+    }
+
+    return Math.min(synergyBonus, 2.0); // 最大2倍まで
+  };
+
   // 決定を実行して結果を計算
-  const executeDecision = (_gameState: GameState, decision: any): DecisionResult => {
-    // リスクベースの成功判定
-    const successRate = decision.risk === 'high' ? 0.6 : decision.risk === 'medium' ? 0.75 : 0.9;
+  const executeDecision = (currentGameState: GameState, decision: any): DecisionResult => {
+    // シナジー効果を計算
+    const synergyBonus = calculateSynergyBonus(decision, currentGameState.pastDecisions);
+
+    // リスクベースの成功判定（過去の経験で成功率向上）
+    const baseSuccessRate = decision.risk === 'high' ? 0.6 : decision.risk === 'medium' ? 0.75 : 0.9;
+    const experienceBonus = Math.min(currentGameState.pastDecisions.length * 0.02, 0.2); // 最大+20%
+    const successRate = Math.min(baseSuccessRate + experienceBonus, 0.95);
     const isSuccess = Math.random() < successRate;
-    
+
     const effects = decision.potentialEffects;
-    const multiplier = isSuccess ? (Math.random() * 0.5 + 0.75) : (Math.random() * 0.4 + 0.3);
-    
+    const multiplier = (isSuccess ? (Math.random() * 0.5 + 0.75) : (Math.random() * 0.4 + 0.3)) * synergyBonus;
+
     return {
       success: isSuccess,
       message: generateResultMessage(decision, isSuccess),
@@ -130,13 +172,32 @@ export const useSimpleGame = () => {
 
   // 効果を会社の状態に適用
   const applyDecisionEffects = (company: CompanyMetrics, result: DecisionResult): CompanyMetrics => {
-    return {
+    const newCompany = {
       ...company,
       marketCap: Math.max(0, company.marketCap + result.effects.marketCapChange),
       cash: Math.max(0, company.cash + result.effects.cashChange),
       happyPeople: Math.max(0, company.happyPeople + result.effects.happyPeopleChange),
       reputation: Math.max(0, Math.min(100, company.reputation + result.effects.reputationChange)),
       employees: Math.max(1, company.employees + result.effects.employeesChange)
+    };
+
+    // 収益システム: 時価総額と評判に基づいて自動収益を計算
+    const baseRevenue = newCompany.marketCap * 0.05; // 時価総額の5%
+    const reputationMultiplier = newCompany.reputation / 100; // 評判ボーナス
+    const monthlyRevenue = baseRevenue * reputationMultiplier;
+
+    // 運営コスト: 従業員数に基づく
+    const employeeCost = newCompany.employees * 5000; // 従業員1人あたり月$5,000
+    const infrastructureCost = newCompany.marketCap * 0.02; // インフラコスト
+    const totalCost = employeeCost + infrastructureCost;
+
+    const monthlyProfit = monthlyRevenue - totalCost;
+
+    return {
+      ...newCompany,
+      cash: Math.max(0, newCompany.cash + monthlyProfit),
+      revenue: monthlyRevenue,
+      monthlyProfit: monthlyProfit
     };
   };
 

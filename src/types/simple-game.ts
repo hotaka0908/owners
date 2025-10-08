@@ -9,6 +9,8 @@ export interface CompanyMetrics {
   employees: number;
   month: number;
   year: number;
+  revenue: number;
+  monthlyProfit: number;
 }
 
 export interface GameEvent {
@@ -56,6 +58,8 @@ export interface GameState {
   history: MarketCapHistoryPoint[];
   gamePhase: 'setup' | 'playing' | 'completed';
   isProcessing: boolean;
+  pastDecisions: string[]; // 過去の決定IDを記録
+  turnCount: number; // ターン数
 }
 
 export interface MarketCapHistoryPoint {
