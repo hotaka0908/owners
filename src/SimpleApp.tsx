@@ -107,8 +107,19 @@ function SimpleApp() {
   if (isGameComplete) {
     const ending = getEnding();
 
+    // Tailwindの制約により、動的クラスは事前定義が必要なため、固定マッピング
+    const bgColorMap: Record<string, string> = {
+      purple: 'bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600',
+      yellow: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600',
+      green: 'bg-gradient-to-br from-green-400 via-green-500 to-green-600',
+      blue: 'bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600',
+      gray: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600',
+      orange: 'bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600',
+      red: 'bg-gradient-to-br from-red-400 via-red-500 to-red-600'
+    };
+
     return (
-      <div className={`min-h-screen bg-gradient-to-br from-${ending.color}-400 via-${ending.color}-500 to-${ending.color}-600 flex items-center justify-center p-4`}>
+      <div className={`min-h-screen ${bgColorMap[ending.color] || bgColorMap.gray} flex items-center justify-center p-4`}>
         <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl max-w-2xl w-full p-8 text-center border-8 border-white/50">
           <div className="text-8xl mb-6 animate-bounce">{ending.emoji}</div>
           <div className="text-6xl font-bold mb-2">{ending.rank}</div>
@@ -189,6 +200,7 @@ function SimpleApp() {
       availableDecisions={gameState.availableDecisions}
       onDecision={makeDecision}
       isProcessing={gameState.isProcessing}
+      turnCount={gameState.turnCount}
     />
   );
 }

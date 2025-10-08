@@ -292,6 +292,53 @@ export const SCALE_EVENTS: GameEvent[] = [
 
 // 段階別の決定オプション
 export const STARTUP_DECISIONS: Record<string, DecisionOption[]> = {
+  'competitor-launch': [
+    {
+      id: 'differentiate-product',
+      type: 'aggressive',
+      title: '独自機能で差別化',
+      description: '競合にない革新的な機能を短期間で開発',
+      cost: 400000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: 1500000, max: 4000000 },
+        cashChange: { min: -400000, max: -400000 },
+        happyPeopleChange: { min: 80000, max: 300000 },
+        reputationChange: { min: 10, max: 25 },
+        employeesChange: { min: 3, max: 10 }
+      }
+    },
+    {
+      id: 'focus-niche',
+      type: 'safe',
+      title: 'ニッチ市場に集中',
+      description: '大手が狙わない特定領域で強みを確立',
+      cost: 150000,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 600000, max: 1800000 },
+        cashChange: { min: -150000, max: -150000 },
+        happyPeopleChange: { min: 30000, max: 120000 },
+        reputationChange: { min: 5, max: 15 },
+        employeesChange: { min: 2, max: 6 }
+      }
+    },
+    {
+      id: 'pivot-business-model',
+      type: 'innovative',
+      title: 'ビジネスモデル変革',
+      description: '全く新しいアプローチで市場を再定義',
+      cost: 300000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 1000000, max: 3500000 },
+        cashChange: { min: -300000, max: -300000 },
+        happyPeopleChange: { min: 50000, max: 250000 },
+        reputationChange: { min: 12, max: 30 },
+        employeesChange: { min: 2, max: 8 }
+      }
+    }
+  ],
   'first-product-idea': [
     {
       id: 'aggressive-dev',
@@ -340,6 +387,100 @@ export const STARTUP_DECISIONS: Record<string, DecisionOption[]> = {
     }
   ],
   
+  'office-space-decision': [
+    {
+      id: 'coworking-space',
+      type: 'safe',
+      title: 'コワーキングスペース',
+      description: '低コストで柔軟性が高い選択',
+      cost: 50000,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 200000, max: 800000 },
+        cashChange: { min: -50000, max: -50000 },
+        happyPeopleChange: { min: 10000, max: 50000 },
+        reputationChange: { min: 2, max: 8 },
+        employeesChange: { min: 1, max: 3 }
+      }
+    },
+    {
+      id: 'rental-office',
+      type: 'innovative',
+      title: 'レンタルオフィス',
+      description: 'バランスの取れた選択肢',
+      cost: 200000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 500000, max: 1500000 },
+        cashChange: { min: -200000, max: -200000 },
+        happyPeopleChange: { min: 20000, max: 100000 },
+        reputationChange: { min: 5, max: 15 },
+        employeesChange: { min: 2, max: 6 }
+      }
+    },
+    {
+      id: 'buy-property',
+      type: 'aggressive',
+      title: '自社物件購入',
+      description: '長期的な投資だが初期コストが高い',
+      cost: 600000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: 1200000, max: 3000000 },
+        cashChange: { min: -600000, max: -600000 },
+        happyPeopleChange: { min: 30000, max: 150000 },
+        reputationChange: { min: 10, max: 25 },
+        employeesChange: { min: 5, max: 12 }
+      }
+    }
+  ],
+  'early-customer-feedback': [
+    {
+      id: 'major-pivot',
+      type: 'aggressive',
+      title: '大幅な方向転換',
+      description: 'フィードバックを元に製品を全面的に見直す',
+      cost: 350000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: 800000, max: 3500000 },
+        cashChange: { min: -350000, max: -350000 },
+        happyPeopleChange: { min: 100000, max: 400000 },
+        reputationChange: { min: 8, max: 25 },
+        employeesChange: { min: 2, max: 8 }
+      }
+    },
+    {
+      id: 'minor-improvements',
+      type: 'safe',
+      title: '小規模な改善',
+      description: '現在の方向性を維持しつつ問題点を修正',
+      cost: 100000,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 400000, max: 1200000 },
+        cashChange: { min: -100000, max: -100000 },
+        happyPeopleChange: { min: 30000, max: 150000 },
+        reputationChange: { min: 3, max: 12 },
+        employeesChange: { min: 1, max: 4 }
+      }
+    },
+    {
+      id: 'ab-testing',
+      type: 'innovative',
+      title: 'データドリブンなA/Bテスト',
+      description: '複数の改善案を並行してテスト',
+      cost: 200000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 600000, max: 2500000 },
+        cashChange: { min: -200000, max: -200000 },
+        happyPeopleChange: { min: 50000, max: 250000 },
+        reputationChange: { min: 8, max: 20 },
+        employeesChange: { min: 2, max: 6 }
+      }
+    }
+  ],
   'talent-acquisition': [
     {
       id: 'hire-expert',
@@ -390,6 +531,100 @@ export const STARTUP_DECISIONS: Record<string, DecisionOption[]> = {
 };
 
 export const GROWTH_DECISIONS: Record<string, DecisionOption[]> = {
+  'funding-opportunity': [
+    {
+      id: 'accept-vc-funding',
+      type: 'aggressive',
+      title: 'VC資金を受け入れる',
+      description: '1000万ドルを獲得し急成長を目指す',
+      cost: 0,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 20000000, max: 50000000 },
+        cashChange: { min: 10000000, max: 10000000 },
+        happyPeopleChange: { min: 100000, max: 500000 },
+        reputationChange: { min: 10, max: 25 },
+        employeesChange: { min: 20, max: 50 }
+      }
+    },
+    {
+      id: 'decline-bootstrap',
+      type: 'safe',
+      title: '自己資金で成長',
+      description: '独立性を保ち慎重に成長',
+      cost: 0,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 3000000, max: 10000000 },
+        cashChange: { min: 0, max: 0 },
+        happyPeopleChange: { min: 50000, max: 200000 },
+        reputationChange: { min: 5, max: 15 },
+        employeesChange: { min: 5, max: 15 }
+      }
+    },
+    {
+      id: 'negotiate-better-terms',
+      type: 'innovative',
+      title: 'より良い条件を交渉',
+      description: '株式希薄化を抑えつつ資金調達',
+      cost: 0,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 15000000, max: 35000000 },
+        cashChange: { min: 7000000, max: 7000000 },
+        happyPeopleChange: { min: 80000, max: 350000 },
+        reputationChange: { min: 12, max: 22 },
+        employeesChange: { min: 15, max: 35 }
+      }
+    }
+  ],
+  'regulatory-challenge': [
+    {
+      id: 'full-compliance',
+      type: 'safe',
+      title: '完全コンプライアンス対応',
+      description: '専門チームを雇い徹底的に対応',
+      cost: 1500000,
+      risk: 'low',
+      potentialEffects: {
+        marketCapChange: { min: 3000000, max: 10000000 },
+        cashChange: { min: -1500000, max: -1500000 },
+        happyPeopleChange: { min: 50000, max: 200000 },
+        reputationChange: { min: 15, max: 30 },
+        employeesChange: { min: 8, max: 20 }
+      }
+    },
+    {
+      id: 'minimal-compliance',
+      type: 'aggressive',
+      title: '最小限の対応',
+      description: 'リスクを取り、必要最小限の対応',
+      cost: 500000,
+      risk: 'high',
+      potentialEffects: {
+        marketCapChange: { min: -2000000, max: 5000000 },
+        cashChange: { min: -500000, max: -500000 },
+        happyPeopleChange: { min: -50000, max: 100000 },
+        reputationChange: { min: -10, max: 10 },
+        employeesChange: { min: 2, max: 8 }
+      }
+    },
+    {
+      id: 'lobby-for-change',
+      type: 'innovative',
+      title: '規制変更のロビー活動',
+      description: '業界団体と協力し規制の見直しを働きかける',
+      cost: 1000000,
+      risk: 'medium',
+      potentialEffects: {
+        marketCapChange: { min: 5000000, max: 15000000 },
+        cashChange: { min: -1000000, max: -1000000 },
+        happyPeopleChange: { min: 100000, max: 300000 },
+        reputationChange: { min: 10, max: 25 },
+        employeesChange: { min: 5, max: 15 }
+      }
+    }
+  ],
   'viral-growth': [
     {
       id: 'scale-infrastructure',

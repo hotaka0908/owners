@@ -182,13 +182,13 @@ export const useSimpleGame = () => {
     };
 
     // 収益システム: 時価総額と評判に基づいて自動収益を計算
-    const baseRevenue = newCompany.marketCap * 0.05; // 時価総額の5%
+    const baseRevenue = newCompany.marketCap * 0.01; // 時価総額の1%（5%→1%に調整）
     const reputationMultiplier = newCompany.reputation / 100; // 評判ボーナス
     const monthlyRevenue = baseRevenue * reputationMultiplier;
 
     // 運営コスト: 従業員数に基づく
     const employeeCost = newCompany.employees * 5000; // 従業員1人あたり月$5,000
-    const infrastructureCost = newCompany.marketCap * 0.02; // インフラコスト
+    const infrastructureCost = newCompany.marketCap * 0.005; // インフラコスト（2%→0.5%に調整）
     const totalCost = employeeCost + infrastructureCost;
 
     const monthlyProfit = monthlyRevenue - totalCost;

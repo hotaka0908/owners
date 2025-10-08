@@ -10,6 +10,7 @@ interface CEODashboardProps {
   availableDecisions: DecisionOption[];
   onDecision: (decisionId: string) => void;
   isProcessing: boolean;
+  turnCount?: number;
 }
 
 export const CEODashboard: React.FC<CEODashboardProps> = ({
@@ -17,7 +18,8 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
   currentEvent,
   availableDecisions,
   onDecision,
-  isProcessing
+  isProcessing,
+  turnCount = 0
 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-green-100">
@@ -30,8 +32,13 @@ export const CEODashboard: React.FC<CEODashboardProps> = ({
               <span>{company.name}</span>
               <span className="text-yellow-300">CEO</span>
             </h1>
-            <div className="text-yellow-200 font-medium bg-white/20 px-3 py-1 rounded-full">
-              📅 {company.year}年{company.month}月
+            <div className="flex items-center space-x-3">
+              <div className="text-yellow-200 font-medium bg-white/20 px-3 py-1 rounded-full">
+                🎯 ターン {turnCount}/20
+              </div>
+              <div className="text-yellow-200 font-medium bg-white/20 px-3 py-1 rounded-full">
+                📅 {company.year}年{company.month}月
+              </div>
             </div>
           </div>
         </div>
